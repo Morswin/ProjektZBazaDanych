@@ -7,4 +7,6 @@ _(+ whether we have implemented those already)_
 - [ ] Backend in Python
   - [ ] Connection with database by SQLModel
   - [ ] REST API with FastAPI
-- [ ] Frontend website with HTMX
+- [ ] Frontend website
+  - [ ] Scripted with HTMX + CSS + JS
+  - [ ] Hosted with NGINX prozy manager
