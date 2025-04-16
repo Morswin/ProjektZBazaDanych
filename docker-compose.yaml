@@ -1,1 +1,5 @@
-
+services:
+  backend:
+    image: backend
+    build:
+      dockerfile: backend/backend.Dockerfile
