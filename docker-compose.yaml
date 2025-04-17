@@ -3,3 +3,6 @@ services:
     image: backend
     build:
       dockerfile: backend/backend.Dockerfile
+    volumes:
+      - ./src:/app
+      - ./db:/app/db
