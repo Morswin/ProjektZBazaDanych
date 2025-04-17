@@ -2,7 +2,7 @@
 University Project that is supposed to conain a database.
 ## Inisial Tech stack
 _(+ whether we have implemented those already)_
-- [ ] Contenarization with Docker
+- [x] Contenarization with Docker
 - [ ] Database in SQLite3
 - [ ] Backend in Python
   - [ ] Connection with database by SQLModel
