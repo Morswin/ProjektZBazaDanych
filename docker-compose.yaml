@@ -4,5 +4,5 @@ services:
     build:
       dockerfile: backend/backend.Dockerfile
     volumes:
-      - ./src:/app
-      - ./db:/app/db
+      - ./backend/src:/app
+      - ./backend/db:/app/db

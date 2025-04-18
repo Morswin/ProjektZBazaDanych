@@ -12,4 +12,4 @@ WORKDIR /app
 RUN python -m pip install sqlmodel
 RUN python -m pip install fastapi
 
-ENTRYPOINT ["/bin/bash"]
+CMD ["python", "main.py"]

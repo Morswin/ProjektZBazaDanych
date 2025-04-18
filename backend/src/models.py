@@ -50,7 +50,7 @@ class OrderStatus(Enum):
     CANCELLED = 6
 
 class Order(SQLModel, table=True):
-    id_order: int | None = Field(default=None, primaty_key=True)
+    id_order: int | None = Field(default=None, primary_key=True)
     id_address: int | None = Field(default=None, foreign_key="address.id_address")
     id_restaurant: int | None = Field(default=None, foreign_key="restaurant.id_restaurant")
     id_ticket: int | None = Field(default=None, foreign_key="ticket.id_ticket")
@@ -103,7 +103,7 @@ class Vehicle(SQLModel, table=True):
     model: str
 
 class Vehicletype(SQLModel, table=True):
-    id_veficle_type: int | None = Field(default=None, primary_key=True)
+    id_vehicle_type: int | None = Field(default=None, primary_key=True)
     name: str
     max_weight: float  # How much it can carry in it's cargo or such
 
