@@ -4,7 +4,7 @@ from sqlmodel import Field, SQLModel
 
 class Ticket(SQLModel, table=True):
     id_ticket: int | None = Field(default=None, primary_key=True)
-    # id_user               FK
+    id_user: int | None = Field(default=None, foreign_key="user.id_user")
     # id_ticket_type        Enum
     # id_ticket_state       Enum
     description: str
@@ -21,9 +21,9 @@ class User(SQLModel, table=True):
 
 class Order(SQLModel, table=True):
     id_order: int | None = Field(default=None, primaty_key=True)
-    # id_address:           FK
-    # id_restaurant:        FK
-    # id_ticket:            FK
+    id_address: int | None = Field(default=None, foreign_key="address.id_address")
+    id_restaurant: int | None = Field(default=None, foreign_key="restaurant.id_restaurant")
+    id_ticket: int | None = Field(default=None, foreign_key="ticket.id_ticket")
     # id_status:            Enum
     price: float
     # order_date:           Date
@@ -41,16 +41,16 @@ class Address(SQLModel, table=True):
 
 class Food(SQLModel, table=True):
     id_food: int | None = Field(default=None, primary_key=True)
-    # id_restaurant         FK
+    id_restaurant: int | None = Field(default=None, foreign_key="restaurant.id_restaurant")
     name: str
     description: str
-    # alergens: str
+    # alergens: str ???
     price: float
 
 class Restaurant(SQLModel, table=True):
     id_restaurant: int | None = Field(default=None, primary_key=True)
-    # id_hours:             FK
-    # id_score:             FK
+    id_hours: int | None = Field(default=None, foreign_key="hours.id_hours")
+    id_score: int | None = Field(default=None, foreign_key="score.id_score")
     name: str
     pay_cut: float
     email: str
@@ -58,21 +58,21 @@ class Restaurant(SQLModel, table=True):
 
 class Driver(SQLModel, table=True):
     id_driver: int | None = Field(default=None, primary_key=True)
-    # id_user               FK
-    # id_hours              FK
-    # id_vehicle            FK
-    # id_score              FK
+    id_user: int | None = Field(default=None, foreign_key="user.id_user")
+    id_hours: int | None = Field(default=None, foreign_key="hours.id_hours")
+    id_vehicle: int | None = Field(default=None, foreign_key="vehicle.id_vehicle")
+    id_score: int | None = Field(default=None, foreign_key="score.id_score")
     # date_drivers_license: Date
     # date_ID               Date ???
     is_occupied: bool
 
 class Vehicle(SQLModel, table=True):
     id_vehicle: int | None = Field(default=None, primary_key=True)
-    # id_vehicle_type       FK
+    id_vehicle_type: int | None = Field(default=None, foreign_key="vehicletype.id_vehicle_type")
     brand: str
     model: str
 
-class VehicleType(SQLModel, table=True):
+class Vehicletype(SQLModel, table=True):
     id_veficle_type: int | None = Field(default=None, primary_key=True)
     name: str
     max_weight: float  # How much it can carry in it's cargo or such
