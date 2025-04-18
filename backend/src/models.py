@@ -1,3 +1,4 @@
+import datetime
 from sqlmodel import Field, SQLModel
 
 # Those models will be eventually moved to another file, once I get it running
@@ -26,7 +27,7 @@ class Order(SQLModel, table=True):
     id_ticket: int | None = Field(default=None, foreign_key="ticket.id_ticket")
     # id_status:            Enum
     price: float
-    # order_date:           Date
+    order_date: datetime
     weight: float
     score_driver: float
     score_restaurant: float
@@ -62,8 +63,8 @@ class Driver(SQLModel, table=True):
     id_hours: int | None = Field(default=None, foreign_key="hours.id_hours")
     id_vehicle: int | None = Field(default=None, foreign_key="vehicle.id_vehicle")
     id_score: int | None = Field(default=None, foreign_key="score.id_score")
-    # date_drivers_license: Date
-    # date_ID               Date ???
+    date_drivers_license: datetime
+    date_ID: datetime
     is_occupied: bool
 
 class Vehicle(SQLModel, table=True):
@@ -80,8 +81,8 @@ class Vehicletype(SQLModel, table=True):
 class Hours(SQLModel, table=True):
     id_hours: int | None = Field(default=None, primary_key=True)
     day: str  # Let's rediscuss if Varchar makes sense here, but for now it stays
-    # time_from:            Time
-    # time_t:               Time
+    time_from: datetime
+    time_t: datetime
 
 class Score(SQLModel, table=True):
     id_score: int | None = Field(default=None, primary_key=True)
