@@ -43,6 +43,7 @@ class User(SQLModel, table=True):
     # Relations
     orders: list["Order"] = Relationship(back_populates="users", link_model=OrderHistory)
     tickets: list["Ticket"] = Relationship(back_populates="user")
+    drivers: list["Driver"] = Relationship(back_populates="user")
 
     # Fields
     user_type: UserType
@@ -99,16 +100,48 @@ class Address(SQLModel, table=True):
     apartment_number: int
 
 
+class Hours(SQLModel, table=True):
+    __tablename__ = "hours"
+
+    # Keys
+    id_hours: int | None = Field(default=None, primary_key=True)
+
+    # Relations
+    restaurants: list["Restaurant"] = Relationship(back_populates="hours")
+    drivers: list["Driver"] = Relationship(back_populates="hours")
+
+    # Fields
+    day: str  # Let's rediscuss if Varchar makes sense here, but for now it stays
+    time_from: time
+    time_t: time
+
+
+class Score(SQLModel, table=True):
+    __tablename__ = "score"
+
+    # Keys
+    id_score: int | None = Field(default=None, primary_key=True)
+
+    # Relations
+    restaurants: list["Restaurant"] = Relationship(back_populates="score")
+    drivers: list["Driver"] = Relationship(back_populates="score")
+
+    # Fields
+    amount: int
+    sum: float
+
+
 class Restaurant(SQLModel, table=True):
     __tablename__ = "restaurant"
 
     # Keys
     id_restaurant: int | None = Field(default=None, primary_key=True)
-    id_hours: int | None = Field(default=None, foreign_key="hours.id_hours")
-    id_score: int | None = Field(default=None, foreign_key="score.id_score")
 
     # Relations
     orders: list["Order"] = Relationship(back_populates="restaurant")
+    foods: list["Restaurant"] = Relationship(back_populates="restaurant")
+    hours: Hours | None = Relationship(back_populates="restaurants")
+    score: Score | None = Relationship(back_populates="restaurants")
 
     # Fields
     name: str
@@ -134,6 +167,7 @@ class Order(SQLModel, table=True):
 
     # Relations
     users: list["User"] = Relationship(back_populates="orders", link_model=OrderHistory)
+    food_orders: list["FoodOrder"] = Relationship(back_populates="order")
     address: Address | None = Relationship(back_populates="orders")
     restaurant: Restaurant | None = Relationship(back_populates="orders")
     ticket: Ticket | None = Relationship(back_populates="orders")
@@ -152,13 +186,27 @@ class Food(SQLModel, table=True):
 
     # Keys
     id_food: int | None = Field(default=None, primary_key=True)
-    id_restaurant: int | None = Field(default=None, foreign_key="restaurant.id_restaurant")
+
+    # Reltaions
+    food_orders: list["FoodOrder"] = Relationship(back_populates="food")
+    restaurant: Restaurant | None = Relationship(back_populates="foods")
 
     # Fields
     name: str
     description: str
     # alergens: str  # For now we will not implement this. It may be a separate table with a many to many relation.
     price: float
+
+
+class FoodOrder(SQLModel, table=True):
+    __tablename__ = "food_order"
+
+    # Relations
+    order: Order | None = Relationship(back_populates="food_orders")
+    food: Food | None = Relationship(back_populates="food_orders")
+
+    # Fields
+    quantity: int
 
 
 class VehicleType(SQLModel, table=True):
@@ -190,40 +238,17 @@ class Vehicle(SQLModel, table=True):
     model: str
 
 
-class Hours(SQLModel, table=True):
-    __tablename__ = "hours"
-
-    # Keys
-    id_hours: int | None = Field(default=None, primary_key=True)
-
-    # Fields
-    day: str  # Let's rediscuss if Varchar makes sense here, but for now it stays
-    time_from: time
-    time_t: time
-
-
-class Score(SQLModel, table=True):
-    __tablename__ = "score"
-
-    # Keys
-    id_score: int | None = Field(default=None, primary_key=True)
-
-    # Fields
-    amount: int
-    sum: float
-
-
 class Driver(SQLModel, table=True):
     __tablename__ = "driver"
 
     # Keys
     id_driver: int | None = Field(default=None, primary_key=True)
-    id_user: int | None = Field(default=None, foreign_key="user.id_user")
-    id_hours: int | None = Field(default=None, foreign_key="hours.id_hours")
-    id_score: int | None = Field(default=None, foreign_key="score.id_score")
 
     # Relations
-    vehicle: Vehicle | None = Relationship(back_populates="drivers")    
+    vehicle: Vehicle | None = Relationship(back_populates="drivers")
+    hours: Hours | None =  Relationship(back_populates="drivers")
+    user: User | None = Relationship(back_populates="drivers")
+    score: Score | None = Relationship(back_populates="drivers")
 
     # Fields
     date_drivers_license: date
