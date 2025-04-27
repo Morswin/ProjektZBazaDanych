@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Strona Główna Kurier</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: #f4f4f4;
+            padding: 10px 20px;
+            border-bottom: 2px solid black;
+        }
+        .buttons {
+            display: flex;
+            gap: 10px;
+        }
+        .button {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 10px 20px;
+            border: 2px solid black;
+            font-size: 1em;
+            font-weight: bold;
+            background-color: #f4f4f4;
+            text-decoration: none;
+            color: black;
+            cursor: pointer;
+            transition: background-color 0.3s, transform 0.2s;
+        }
+        .button:hover {
+            background-color: #e0e0e0;
+            transform: scale(1.05);
+        }
+        main {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+        }
+        .courier-info {
+            display: flex;
+            justify-content: space-between;
+            width: 80%;
+            margin-bottom: 20px;
+            font-size: 1em;
+            font-weight: bold;
+        }
+        .courier-info div {
+            border: 1px solid black;
+            padding: 10px;
+            text-align: center;
+            width: 23%;
+        }
+        .order-container {
+            display: grid;
+            grid-template-columns: 1fr 2fr 1fr;
+            gap: 20px;
+            width: 80%;
+            border: 2px solid black;
+            padding: 20px;
+            background-color: #f9f9f9;
+        }
+        .order-container .new-order,
+        .order-container .accept-order {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border: 1px solid black;
+            padding: 10px;
+            text-align: center;
+        }
+        .order-container .order-details {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            border: 1px solid black;
+            padding: 10px;
+        }
+        .order-container .order-details div {
+            margin: 5px 0;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div>Strona Główna Kurier</div>
+        <div class="buttons">
+            <a href="#" class="button">Kontakt</a>
+            <a href="#" class="button">Grafik</a>
+            <a href="#" class="button">Wyloguj się</a>
+        </div>
+    </header>
+    <main>
+        <!-- Informacje o kurierze -->
+        <div class="courier-info">
+            <div>Pozostało godzin: 3,5H</div>
+            <div>Ilość Zrealizowanych zamówień: 3</div>
+            <div>Zarobiono: 96 GB</div>
+            <div>Ocena: 3/5</div>
+        </div>
+        <!-- Kontener zamówienia -->
+        <div class="order-container">
+            <div class="new-order">
+                <strong>Nowe zamówienie</strong>
+            </div>
+            <div class="order-details">
+                <div>Restauracja: Nazwa</div>
+                <div>Opis: Duże/Lekkie/Ciężkie/Małe</div>
+            </div>
+            <div class="accept-order">
+                <button class="button">Przyjmij</button>
+            </div>
+        </div>
+    </main>
+</body>
+</html>

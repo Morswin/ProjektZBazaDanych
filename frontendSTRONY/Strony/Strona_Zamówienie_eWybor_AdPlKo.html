@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Podsumowanie Zamówienia</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: #f4f4f4;
+            padding: 10px 20px;
+            border-bottom: 2px solid black;
+        }
+        .buttons {
+            display: flex;
+            gap: 10px;
+        }
+        .button {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 10px 20px;
+            border: 2px solid black;
+            font-size: 1em;
+            font-weight: bold;
+            background-color: #f4f4f4;
+            text-decoration: none;
+            color: black;
+            cursor: pointer;
+            transition: background-color 0.3s, transform 0.2s;
+        }
+        .button:hover {
+            background-color: #e0e0e0;
+            transform: scale(1.05);
+        }
+        main {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+        }
+        .summary-container {
+            display: grid;
+            grid-template-columns: 2fr 2fr 1fr;
+            gap: 20px;
+            width: 80%;
+            border: 2px solid black;
+            padding: 20px;
+            background-color: #f9f9f9;
+        }
+        .required-data, .order-summary, .payment-methods {
+            border: 1px solid black;
+            padding: 10px;
+        }
+        .required-data label, .payment-methods label {
+            display: block;
+            margin-bottom: 10px;
+        }
+        .order-summary table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        .order-summary th, .order-summary td {
+            border: 1px solid black;
+            padding: 10px;
+            text-align: center;
+        }
+        .order-summary .total {
+            font-weight: bold;
+        }
+        .action-buttons {
+            display: flex;
+            justify-content: space-between;
+            width: 80%;
+            margin-top: 20px;
+        }
+        .action-buttons .button {
+            width: 45%;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div>Podsumowanie Zamówienia</div>
+        <div class="buttons">
+            <a href="#" class="button">Kontakt</a>
+            <a href="#" class="button">Zaloguj się</a>
+            <a href="#" class="button">Zarejestruj się</a>
+        </div>
+    </header>
+    <main>
+        <div class="summary-container">
+            <!-- Wymagane dane -->
+            <div class="required-data">
+                <h3>Wymagane dane</h3>
+                <label for="address">Adres:</label>
+                <input type="text" id="address" value="Gnomowa 94/3">
+                
+                <label for="phone">Telefon:</label>
+                <div style="display: flex; gap: 10px;">
+                    <input type="text" id="country-code" value="+48" style="width: 20%;">
+                    <input type="text" id="phone" value="019329423" style="width: 75%;">
+                </div>
+                
+                <label for="email">E-mail:</label>
+                <input type="email" id="email" value="gnom43@gmail.com">
+            </div>
+            <!-- Zamówienie -->
+            <div class="order-summary">
+                <h3>Zamówienie</h3>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Jedzenie</th>
+                            <th>Cena</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Pizza</td>
+                            <td>25 zł</td>
+                        </tr>
+                        <tr>
+                            <td>Burger</td>
+                            <td>20 zł</td>
+                        </tr>
+                        <tr>
+                            <td>Sałatka</td>
+                            <td>15 zł</td>
+                        </tr>
+                    </tbody>
+                    <tfoot>
+                        <tr>
+                            <td class="total">Suma:</td>
+                            <td class="total">60 zł</td>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
+            <!-- Metoda płatności -->
+            <div class="payment-methods">
+                <h3>Metoda płatności</h3>
+                <label><input type="radio" name="payment" value="blik"> Blik</label>
+                <label><input type="radio" name="payment" value="przelewy24"> Przelewy24</label>
+                <label><input type="radio" name="payment" value="gotowka"> Gotówka</label>
+                <label><input type="radio" name="payment" value="gnombacksy"> GnomBacksy</label>
+            </div>
+        </div>
+        <!-- Przyciski akcji -->
+        <div class="action-buttons">
+            <button class="button">Zamów</button>
+            <button class="button">Anuluj Zamówienie</button>
+        </div>
+    </main>
+</body>
+</html>

@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Strona Główna Restauracji</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: #f4f4f4;
+            padding: 10px 20px;
+            border-bottom: 2px solid black;
+            position: relative;
+        }
+        .rating-header {
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 1.5em;
+            font-weight: bold;
+        }
+        .buttons {
+            display: flex;
+            gap: 10px;
+        }
+        .button {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 10px 20px;
+            border: 2px solid black;
+            font-size: 1em;
+            font-weight: bold;
+            background-color: #f4f4f4;
+            text-decoration: none;
+            color: black;
+            cursor: pointer;
+            transition: background-color 0.3s, transform 0.2s;
+        }
+        .button:hover {
+            background-color: #e0e0e0;
+            transform: scale(1.05);
+        }
+        main {
+            display: grid;
+            grid-template-columns: 2fr 1fr 2fr;
+            gap: 20px;
+            padding: 20px;
+        }
+        .menu, .orders, .add-to-menu {
+            border: 2px solid black;
+            padding: 20px;
+            background-color: #f9f9f9;
+        }
+        .menu h3, .orders h3, .add-to-menu h3 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .menu table, .orders table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        .menu table th, .menu table td, .orders table th, .orders table td {
+            border: 1px solid black;
+            padding: 10px;
+            text-align: center;
+        }
+        .add-to-menu form {
+            display: grid;
+            grid-template-columns: 1fr 2fr;
+            gap: 10px;
+            align-items: center;
+        }
+        .add-to-menu form .row {
+            grid-column: span 2;
+            display: flex;
+            gap: 10px;
+        }
+        .add-to-menu form input, .add-to-menu form button {
+            padding: 10px;
+            border: 1px solid black;
+            font-size: 1em;
+        }
+        .add-to-menu form button {
+            background-color: #f4f4f4;
+            cursor: pointer;
+            transition: background-color 0.3s, transform 0.2s;
+        }
+        .add-to-menu form button:hover {
+            background-color: #e0e0e0;
+            transform: scale(1.05);
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div>Strona Główna Restauracji</div>
+        <div class="rating-header">Ocena: 3/5</div>
+        <div class="buttons">
+            <a href="#" class="button">Kontakt</a>
+            <a href="#" class="button">Dokumenty</a>
+            <a href="#" class="button">Wyloguj się</a>
+        </div>
+    </header>
+    <main>
+        <!-- Menu -->
+        <div class="menu">
+            <h3>Menu</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Jedzenie</th>
+                        <th>Opis</th>
+                        <th>Cena</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Pizza</td>
+                        <td>Ser, Sos, Szynka</td>
+                        <td>25 zł</td>
+                    </tr>
+                    <tr>
+                        <td>Burger</td>
+                        <td>Bułka, Mięso, Warzywa</td>
+                        <td>20 zł</td>
+                    </tr>
+                    <tr>
+                        <td>Sałatka</td>
+                        <td>Sałata, Pomidor, Ogórek</td>
+                        <td>15 zł</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <!-- Zamówienia -->
+        <div class="orders">
+            <h3>Zamówienia</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Zamówienie</th>
+                        <th>Przyjęte </th>
+                        <th>Odebrane </th>
+                        <th>Anulowane </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>1</td>
+                        <td>3</td>
+                        <td>5</td>
+                        <td>1</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <!-- Dodaj do menu -->
+<div class="add-to-menu">
+    <h3>Dodaj do menu</h3>
+    <form>
+        <div class="row">
+            <div style="display: flex; flex-direction: column; gap: 10px; width: 30%;">
+                <input type="text" placeholder="Jedzenie">
+                <input type="text" placeholder="Cena">
+                <button type="submit">Dodaj</button>
+            </div>
+            <textarea placeholder="Opis" style="flex: 1; height: 150px;"></textarea>
+        </div>
+    </form>
+</div>
+    </main>
+</body>
+</html>

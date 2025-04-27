@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kontakt</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: #f4f4f4;
+            padding: 10px 20px;
+            border-bottom: 2px solid black;
+        }
+        .buttons {
+            display: flex;
+            gap: 10px;
+        }
+        .button {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 10px 20px;
+            border: 2px solid black;
+            font-size: 1em;
+            font-weight: bold;
+            background-color: #f4f4f4;
+            text-decoration: none;
+            color: black;
+            cursor: pointer;
+            transition: background-color 0.3s, transform 0.2s;
+        }
+        .button:hover {
+            background-color: #e0e0e0;
+            transform: scale(1.05);
+        }
+        main {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: calc(100vh - 60px); /* Odejmij wysokość nagłówka */
+            margin: 0;
+        }
+        .contact-container {
+            width: 50%;
+            border: 2px solid black;
+            padding: 20px;
+            background-color: #f9f9f9;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+        .contact-container select,
+        .contact-container textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 1em;
+        }
+        .contact-container textarea {
+            height: 150px;
+            resize: none;
+        }
+        .action-buttons {
+            display: flex;
+            justify-content: space-between;
+        }
+        .action-buttons .button {
+            width: 48%;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div>Kontakt</div>
+        <div class="buttons">
+            <a href="#" class="button">Strona główna</a>
+            <a href="#" class="button">Zaloguj się</a>
+            <a href="#" class="button">Zarejestruj się</a>
+        </div>
+    </header>
+    <main>
+        <div class="contact-container">
+            <label for="incident">Co się stało:</label>
+            <select id="incident">
+                <option value="kradziez">Gnom ukradł jedzenie</option>
+                <option value="problem">Problem z zamówieniem</option>
+                <option value="inne">Inne</option>
+            </select>
+            <label for="description">Opis Zdarzenia:</label>
+            <textarea id="description" placeholder="Opisz zdarzenie..."></textarea>
+            <div class="action-buttons">
+                <button class="button">Zgłoś Zdarzenie</button>
+                <button class="button">Anuluj Zdarzenie</button>
+            </div>
+        </div>
+    </main>
+</body>
+</html>
