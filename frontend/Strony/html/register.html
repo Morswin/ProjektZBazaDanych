@@ -10,6 +10,9 @@
     <body>
     <header>
         <a href="home_page.html" class="main_page_back"><h2>placeholder</h2></a>
+        <nav>
+            <a href="log_in.html">Log in</a>
+        </nav>
     </header>
     <main>
         <form id="reg_form">
@@ -31,20 +34,29 @@
             <input type="email" id="email_r" name="emailRegister" placeholder="example@gmail.com"><br>
 
             <label for="phone_r">Phone number: <span class="red_star">*</span></label><br>
-            <input type="tel" id="phone_r" name="phoneNum"><br>
+            <input type="tel" id="phone_r" name="phoneNum" placeholder="111222333"><br>
 
             <label for="pass_one_r">Password: <span class="red_star">*</span></label><br>
-            <input id="pass_one_r" name="passOneRegister" type="password"><br>
+            <input id="pass_one_r" name="passOneRegister" type="password" placeholder="*********"><br>
 
             <label for="pass_confirm_r">Confirm password: <span class="red_star">*</span></label><br>
-            <input type="password" id="pass_confirm_r" name="passTwoRegister"><br>
+            <input type="password" id="pass_confirm_r" name="passTwoRegister" placeholder="*********"><br>
 
             <label for="city_r">City: </label><br>
-            <input type="text" id="city_r" name="city"><br>
+            <input type="text" id="city_r" name="city" placeholder="City"><br>
+
+            <label for="street_r">Street: </label><br>
+            <input type="text" id="street_r" name="street" placeholder="Street"><br>
+
+            <label for="building_num_r">Building number: </label> <br>
+            <input type="number" id="building_num_r" name="buildNum" placeholder="Building number"><br>
+             
+            <label for="flat_num_r">Flat number:</label><br>
+            <input type="number" id="flat_num_r" name="flatNum" placeholder="Flat number"><br>
 
             <label for="check_rule_agree">Agree with terms of services <span class="red_star">*</span></label>
             <input type="checkbox" id="check_rule_agree" name="checkBoxAgreeRegister"><br>
-            
+
             <input type="submit" name="bttRegister" value="Rejestruj">
         </form>
     </main>

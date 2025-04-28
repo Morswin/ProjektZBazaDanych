@@ -12,7 +12,13 @@ form.addEventListener('submit', function(event){
     const confirmPassword = form_data.get('passTwoRegister');
     const email = form_data.get('emailRegister');
     const check = form_data.get('checkBoxAgreeRegister');
-    const phone = form_data.get('phoneNum');
+    const phone = form_data.get('phoneNum').trim;
+
+    const city = form_data.get('city');
+    const street = form_data.get('street');
+    const building = form_data.get('buildNum');
+    const flatNum = form_data.get('flatNum');
+
 
     if ( !check|| !firstName || !surrName || !gender || !password || !confirmPassword || !email || !phone) {
         alert("Enter values in spaces with *");
