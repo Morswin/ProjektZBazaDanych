@@ -1,5 +1,6 @@
 from sqlmodel import SQLModel, create_engine
-from models import *
+# from models import *
+import populate
 
 
 if __name__ == "__main__":
@@ -8,3 +9,5 @@ if __name__ == "__main__":
     sqlite_url = f"sqlite:///db/{sqlite_file}"
     engine = create_engine(sqlite_url, echo=True)
     SQLModel.metadata.create_all(engine)
+    populate.populate(engine)
+

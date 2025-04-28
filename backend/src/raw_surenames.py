@@ -1,4 +1,4 @@
-surnames = [
+surenames = [
     "Nowak",
     "Kowalski",
     "Wiśniewski",
