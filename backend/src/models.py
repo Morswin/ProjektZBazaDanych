@@ -201,6 +201,9 @@ class Food(SQLModel, table=True):
 class FoodOrder(SQLModel, table=True):
     __tablename__ = "food_order"
 
+    # Keys
+    id_food_order: int | None = Field(default=None, primary_key=True)
+
     # Relations
     order: Order | None = Relationship(back_populates="food_orders")
     food: Food | None = Relationship(back_populates="food_orders")
