@@ -80,14 +80,42 @@
             margin: 5px 0;
         }
     </style>
+    <script>
+        function handleForgotPassword() {
+        const forgotPasswordButton = document.querySelector('.button.forgot-password');
+        forgotPasswordButton.textContent = "Nie nasz problem";
+    }
+        function handleLogin() {
+            const email = document.getElementById('email').value.trim();
+            const password = document.getElementById('password').value.trim();
+            const loginButton = document.querySelector('.button.login');
+    
+            if (!email || !password) {
+                // Jeśli brak e-maila lub hasła
+                loginButton.style.backgroundColor = "#f8d7da"; // Czerwone tło
+                loginButton.style.color = "#721c24"; // Czerwony tekst
+                alert("Podane hasło lub e-mail są nieprawidłowe");
+                return;
+            }
+    
+            // Jeśli e-mail i hasło są wpisane
+            loginButton.style.backgroundColor = "#d4edda"; // Zielone tło
+            loginButton.style.color = "#155724"; // Zielony tekst
+    
+            // Przekierowanie na stronę główną po 300 ms
+            setTimeout(() => {
+                window.location.href = "Strona_Glowna.html";
+            }, 300);
+        }
+    </script>
 </head>
 <body>
     <header>
         <div>Logowanie</div>
         <div class="buttons">
-            <a href="#" class="button">Kontakt</a>
-            <a href="#" class="button">Strona Główna</a>
-            <a href="#" class="button">Zarejestruj się</a>
+            <a href="Strona_Kontakt.html" class="button">Kontakt</a>
+            <a href="Strona_Glowna.html" class="button">Strona Główna</a>
+            <a href="Strona_Rejestracja.html" class="button">Zarejestruj się</a>
         </div>
     </header>
     <main>
@@ -96,9 +124,9 @@
             <input type="email" id="email" placeholder="gnom43@gmail.com">
             <label for="password">Hasło:</label>
             <input type="password" id="password" placeholder="********">
-            <a href="#" class="button">Zaloguj się</a>
-            <a href="#" class="button">Zapomniałem hasła</a>
-            <a href="#" class="button">Zarejestruj się</a>
+            <a href="#" class="button login" onclick="handleLogin()">Zaloguj się</a>
+            <a href="#" class="button forgot-password" onclick="handleForgotPassword()">Zapomniałem hasła</a>
+            <a href="Strona_Rejestracja.html" class="button">Zarejestruj się</a>
         </div>
     </main>
 </body>

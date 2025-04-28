@@ -99,48 +99,99 @@
         padding: 10px 15px;
     }
     </style>
+    <script>
+        function validateRegistration() {
+            const firstName = document.getElementById('first-name').value.trim();
+            const lastName = document.getElementById('last-name').value.trim();
+            const gender = document.getElementById('gender').value;
+            const password = document.getElementById('password').value.trim();
+            const confirmPassword = document.getElementById('confirm-password').value.trim();
+            const email = document.getElementById('email').value.trim();
+            const phone = document.getElementById('phone').value.trim();
+            const address = document.getElementById('address').value.trim();
+            const registerButton = document.getElementById('register-button'); // Użycie id zamiast klasy
+    
+            // Resetowanie stylów przycisku
+            registerButton.style.backgroundColor = "";
+            registerButton.style.color = "";
+    
+            // Sprawdzenie wymaganych pól
+            if (!firstName || !lastName || !gender || !password || !confirmPassword || !email || !address) {
+                registerButton.style.backgroundColor = "#f8d7da"; // Czerwone tło
+                registerButton.style.color = "#721c24"; // Czerwony tekst
+                alert("Uzupełnij dane z gwiazdką *");
+                return;
+            }
+    
+            // Sprawdzenie zgodności haseł
+            if (password !== confirmPassword) {
+                registerButton.style.backgroundColor = "#f8d7da"; // Czerwone tło
+                registerButton.style.color = "#721c24"; // Czerwony tekst
+                alert("Błędne hasła");
+                return;
+            }
+    
+            // Sprawdzenie numeru telefonu (jeśli podany)
+            if (phone && (!/^\d{9}$/.test(phone))) {
+                registerButton.style.backgroundColor = "#f8d7da"; // Czerwone tło
+                registerButton.style.color = "#721c24"; // Czerwony tekst
+                alert("Numer telefonu musi mieć 9 cyfr");
+                return;
+            }
+    
+            // Jeśli dane są poprawne
+            registerButton.style.backgroundColor = "#d4edda"; // Zielone tło
+            registerButton.style.color = "#155724"; // Zielony tekst
+    
+            // Przekierowanie na stronę główną po 300 ms
+            setTimeout(() => {
+                window.location.href = "Strona_Glowna.html";
+            }, 300);
+        }
+    </script>
 </head>
 <body>
     <header>
         <div>Rejestracja</div>
         <div class="buttons">
-            <a href="#" class="button">Kontakt</a>
-            <a href="#" class="button">Zaloguj się</a>
-            <a href="#" class="button">Strona główna</a>
+            <a href="Strona_Kontakt.html" class="button">Kontakt</a>
+            <a href="Strona_Logowania.html" class="button">Zaloguj się</a>
+            <a href="Strona_Glowna.html" class="button">Strona główna</a>
         </div>
     </header>
     <main>
         <div class="register-container">
             <div class="top-left">
-                <label for="first-name">Imię:</label>
+                <label for="first-name">Imię: <span style="color: red;">*</span></label>
                 <input type="text" id="first-name" placeholder="Jan">
-                <label for="last-name">Nazwisko:</label>
+                <label for="last-name">Nazwisko: <span style="color: red;">*</span></label>
                 <input type="text" id="last-name" placeholder="Kowalski">
-                <label for="gender">Płeć:</label>
+                <label for="gender">Płeć: <span style="color: red;">*</span></label>
                 <select id="gender">
+                    <option value="" disabled selected>Wybierz płeć</option>
                     <option value="male">Mężczyzna</option>
                     <option value="female">Kobieta</option>
                     <option value="other">Inna</option>
                 </select>
             </div>
             <div class="top-right">
-                <label for="password">Hasło:</label>
+                <label for="password">Hasło: <span style="color: red;">*</span></label>
                 <input type="password" id="password" placeholder="********">
-                <label for="confirm-password">Powtórz Hasło:</label>
+                <label for="confirm-password">Powtórz Hasło: <span style="color: red;">*</span></label>
                 <input type="password" id="confirm-password" placeholder="********">
             </div>
             <div class="bottom-left">
-                <label for="email">E-mail:</label>
+                <label for="email">E-mail: <span style="color: red;">*</span></label>
                 <input type="email" id="email" placeholder="jan.kowalski@gmail.com">
                 <label for="phone">Telefon:</label>
-                <input type="tel" id="phone" placeholder="123-456-789">
+                <input type="tel" id="phone" placeholder="123456789">
             </div>
             <div class="bottom-right">
-                <label for="address">Adres:</label>
+                <label for="address">Adres: <span style="color: red;">*</span></label>
                 <input type="text" id="address" placeholder="ul. Przykładowa 1/2">
             </div>
             <div class="center">
-                <a href="#" class="button">Zarejestruj się</a>
+                <button id="register-button" class="button" onclick="validateRegistration()">Zarejestruj się</button>
             </div>
         </div>
     </main>

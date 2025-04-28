@@ -23,23 +23,29 @@
             gap: 10px;
         }
         .button {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            padding: 10px 20px;
-            border: 2px solid black;
-            font-size: 1em;
-            font-weight: bold;
-            background-color: #f4f4f4;
-            text-decoration: none;
-            color: black;
-            cursor: pointer;
-            transition: background-color 0.3s, transform 0.2s;
-        }
-        .button:hover {
-            background-color: #e0e0e0;
-            transform: scale(1.05);
-        }
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 10px 20px;
+        border: 2px solid black;
+        font-size: 1em;
+        font-weight: bold;
+        background-color: #f4f4f4;
+        text-decoration: none;
+        color: black;
+        cursor: pointer;
+        transition: background-color 0.3s, transform 0.2s;
+    }
+    .button:hover {
+        background-color: #e0e0e0;
+        transform: scale(1.05);
+    }
+    .button.submit:hover {
+        background-color: #d4edda; /* Lekko zielony kolor */
+    }
+    .button .icon {
+        margin-left: 10px; /* Odstęp między tekstem a ikoną */
+    }
         main {
             display: flex;
             justify-content: center;
@@ -58,16 +64,21 @@
         }
         .contact-container select,
         .contact-container textarea {
-            width: 100%;
+            width: 80%;
             padding: 10px;
             border: 1px solid #ccc;
             border-radius: 5px;
             font-size: 1em;
         }
         .contact-container textarea {
-            height: 150px;
-            resize: none;
-        }
+        width: 95%; /* Zmniejsz szerokość */
+        height: 100px; /* Zmniejsz wysokość */
+        padding: 10px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        font-size: 1em;
+        resize: none;
+    }
         .action-buttons {
             display: flex;
             justify-content: space-between;
@@ -75,15 +86,52 @@
         .action-buttons .button {
             width: 48%;
         }
+        .description {
+        width: 60%; /* Zmniejsz szerokość */
+        height: 100px; /* Zmniejsz wysokość */
+        padding: 10px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        font-size: 1em;
+    }
     </style>
+    <script>
+        function handleSubmit() {
+            const description = document.getElementById('description').value.trim();
+            const incident = document.getElementById('incident').value;
+            const button = document.querySelector('.button.submit');
+            const icon = button.querySelector('.icon');
+    
+            // Sprawdzenie, czy opis jest pusty lub nie wybrano opcji
+            if (!description || incident === "") {
+                button.style.backgroundColor = "#f8d7da"; // Czerwone tło
+                button.style.color = "#721c24"; // Czerwony tekst
+                icon.textContent = "✖"; // Ikona X
+                icon.style.display = "inline"; // Pokaż ikonę
+                alert("Opis musi być uzupełniony i zaznaczone co się stało");
+                return;
+            }
+    
+            // Jeśli wszystko jest poprawne
+            button.style.backgroundColor = "#d4edda"; // Zielone tło
+            button.style.color = "#155724"; // Zielony tekst
+            icon.textContent = "✔"; // Ikona ptaszka
+            icon.style.display = "inline"; // Pokaż ikonę
+    
+            // Przekierowanie na stronę główną po 1,5 sekundy
+            setTimeout(() => {
+                window.location.href = "Strona_Glowna.html";
+            }, 700);
+        }
+    </script>
 </head>
 <body>
     <header>
         <div>Kontakt</div>
         <div class="buttons">
-            <a href="#" class="button">Strona główna</a>
-            <a href="#" class="button">Zaloguj się</a>
-            <a href="#" class="button">Zarejestruj się</a>
+            <a href="Strona_Glowna.html" class="button">Strona główna</a>
+            <a href="Strona_Logowania.html" class="button">Zaloguj się</a>
+            <a href="Strona_Rejestracja.html" class="button">Zarejestruj się</a>
         </div>
     </header>
     <main>
@@ -97,8 +145,13 @@
             <label for="description">Opis Zdarzenia:</label>
             <textarea id="description" placeholder="Opisz zdarzenie..."></textarea>
             <div class="action-buttons">
-                <button class="button">Zgłoś Zdarzenie</button>
-                <button class="button">Anuluj Zdarzenie</button>
+                <button class="button submit" onclick="handleSubmit()">
+                    Zgłoś Zdarzenie
+                    <span class="icon" style="display: none;">✔</span> <!-- Ikona ptaszka -->
+                </button>
+                <button class="button">
+                    <a href="Strona_Glowna.html" style="text-decoration: none; color: inherit; display: flex; justify-content: center; align-items: center; height: 100%; width: 100%;">Anuluj Zdarzenie</a>
+                </button>
             </div>
         </div>
     </main>

@@ -80,44 +80,62 @@
             text-align: center;
         }
     </style>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const restaurantItems = document.querySelectorAll('.restaurant-item');
+    
+            restaurantItems.forEach(item => {
+                item.addEventListener('click', () => {
+                    // Podświetlenie na zielono
+                    item.style.backgroundColor = '#d4edda'; // Zielone tło
+                    item.style.color = '#155724'; // Zielony tekst
+    
+                    // Przekierowanie na stronę wyboru jedzenia po 300 ms
+                    setTimeout(() => {
+                        window.location.href = "Strona_Zamówienie_eWybor_Jedzenia.html"; // Zmień na odpowiednią stronę
+                    }, 300);
+                });
+            });
+        });
+    </script>
 </head>
 <body>
     <header>
         <div>Wybór Restauracji</div>
         <div class="buttons">
-            <a href="#" class="button">Kontakt</a>
-            <a href="#" class="button">Zaloguj się</a>
-            <a href="#" class="button">Zarejestruj się</a>
+            <a href="Strona_Kontakt.html" class="button">Kontakt</a>
+            <a href="Strona_Logowania.html" class="button">Zaloguj się</a>
+            <a href="Strona_Rejestracja.html" class="button">Zarejestruj się</a>
         </div>
     </header>
     <main>
-        <div class="restaurant-list">
+        <div class="restaurant-list" id="restaurant-list">
             <div class="restaurant-item">
-                <div>Restauracja</div>
+                <div>Restauracja 1</div>
                 <div>Ocena restauracji</div>
                 <div>Np.: Jedzenie</div>
                 <div>Cena jedzenia</div>
             </div>
             <div class="restaurant-item">
-                <div>Restauracja</div>
+                <div>Restauracja 2</div>
                 <div>Ocena restauracji</div>
                 <div>Np.: Jedzenie</div>
                 <div>Cena jedzenia</div>
             </div>
             <div class="restaurant-item">
-                <div>Restauracja</div>
+                <div>Restauracja 3</div>
                 <div>Ocena restauracji</div>
                 <div>Np.: Jedzenie</div>
                 <div>Cena jedzenia</div>
             </div>
             <div class="restaurant-item">
-                <div>Restauracja</div>
+                <div>Restauracja 4</div>
                 <div>Ocena restauracji</div>
                 <div>Np.: Jedzenie</div>
                 <div>Cena jedzenia</div>
             </div>
             <div class="restaurant-item">
-                <div>Restauracja</div>
+                <div>Restauracja 5</div>
                 <div>Ocena restauracji</div>
                 <div>Np.: Jedzenie</div>
                 <div>Cena jedzenia</div>

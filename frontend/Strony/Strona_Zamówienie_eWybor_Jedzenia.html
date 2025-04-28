@@ -90,14 +90,39 @@
             transform: scale(1.05);
         }
     </style>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const orderButton = document.getElementById('order-button');
+            const checkboxes = document.querySelectorAll('.food-table input[type="checkbox"]');
+    
+            orderButton.addEventListener('click', () => {
+                // Sprawdzenie, czy co najmniej jedno jedzenie zostało zaznaczone
+                const isAnyChecked = Array.from(checkboxes).some(checkbox => checkbox.checked);
+    
+                if (isAnyChecked) {
+                    // Jeśli zaznaczono co najmniej jedno jedzenie, przekieruj na stronę
+                    orderButton.style.backgroundColor = "#d4edda"; // Zielone tło
+                    orderButton.style.color = "#155724"; // Zielony tekst
+                    setTimeout(() => {
+                        window.location.href = "Strona_Zamówienie_eWybor_AdPlKo.html";
+                    }, 300);
+                } else {
+                    // Jeśli nic nie zaznaczono, podświetl przycisk na czerwono i wyświetl komunikat
+                    orderButton.style.backgroundColor = "#f8d7da"; // Czerwone tło
+                    orderButton.style.color = "#721c24"; // Czerwony tekst
+                    alert("Wybierz jedzenie");
+                }
+            });
+        });
+    </script>
 </head>
 <body>
     <header>
         <div>Wybór Jedzenia</div>
         <div class="buttons">
-            <a href="#" class="button">Kontakt</a>
-            <a href="#" class="button">Zaloguj się</a>
-            <a href="#" class="button">Zarejestruj się</a>
+            <a href="Strona_Kontakt.html" class="button">Kontakt</a>
+            <a href="Strona_Logowania.html" class="button">Zaloguj się</a>
+            <a href="Strona_Rejestracja.html" class="button">Zarejestruj się</a>
         </div>
     </header>
     <main>
@@ -147,7 +172,7 @@
                 </tr>
             </tbody>
         </table>
-        <button class="order-button">Zamów</button>
+        <button id="order-button" class="order-button">Zamów</button>
     </main>
 </body>
 </html>
