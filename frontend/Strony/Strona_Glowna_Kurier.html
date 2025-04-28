@@ -90,20 +90,50 @@
             margin: 5px 0;
         }
     </style>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const timeElement = document.getElementById('remaining-time');
+            let remainingTime = parseFloat(localStorage.getItem('remainingTime')) || 3.5; // Pobierz czas z localStorage lub ustaw domyślnie 3,5H
+    
+            function updateTime() {
+                if (remainingTime > 0) {
+                    remainingTime -= 0.01; // Zmniejsz czas o 0,01
+                    remainingTime = Math.max(remainingTime, 0); // Upewnij się, że czas nie spadnie poniżej 0
+                    localStorage.setItem('remainingTime', remainingTime.toFixed(2)); // Zapisz czas w localStorage
+                    timeElement.textContent = `Pozostało godzin: ${remainingTime.toFixed(2)}H`;
+                } else {
+                    // Jeśli czas osiągnie 0
+                    timeElement.textContent = "Jesteś wolny";
+                    timeElement.style.backgroundColor = "#d4edda"; // Zielone tło
+                    timeElement.style.color = "#155724"; // Zielony tekst
+                    clearInterval(timer); // Zatrzymaj licznik
+                }
+            }
+    
+            // Uruchom aktualizację co minutę (60 000 ms)
+            const timer = setInterval(updateTime, 60000);
+    
+            // Zaktualizuj czas na stronie przy załadowaniu
+            updateTime();
+        });
+        function goToOdebram() {
+            window.location.href = "Strona_Kurier_Odbieram.html";
+    }
+    </script>
 </head>
 <body>
     <header>
         <div>Strona Główna Kurier</div>
         <div class="buttons">
-            <a href="#" class="button">Kontakt</a>
+            <a href="Strona_Kontakt.html" class="button">Kontakt</a>
             <a href="#" class="button">Grafik</a>
-            <a href="#" class="button">Wyloguj się</a>
+            <a href="Strona_Glowna.html" class="button">Wyloguj się</a>
         </div>
     </header>
     <main>
         <!-- Informacje o kurierze -->
         <div class="courier-info">
-            <div>Pozostało godzin: 3,5H</div>
+            <div id="remaining-time">Pozostało godzin: 3,5H</div>
             <div>Ilość Zrealizowanych zamówień: 3</div>
             <div>Zarobiono: 96 GB</div>
             <div>Ocena: 3/5</div>
@@ -118,7 +148,7 @@
                 <div>Opis: Duże/Lekkie/Ciężkie/Małe</div>
             </div>
             <div class="accept-order">
-                <button class="button">Przyjmij</button>
+                <button class="button" onclick="goToOdebram()">Przyjmij</button>
             </div>
         </div>
     </main>

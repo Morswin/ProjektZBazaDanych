@@ -96,22 +96,31 @@
             const checkboxes = document.querySelectorAll('.food-table input[type="checkbox"]');
     
             orderButton.addEventListener('click', () => {
-                // Sprawdzenie, czy co najmniej jedno jedzenie zostało zaznaczone
-                const isAnyChecked = Array.from(checkboxes).some(checkbox => checkbox.checked);
+                const selectedItems = [];
+                let totalPrice = 0;
     
-                if (isAnyChecked) {
-                    // Jeśli zaznaczono co najmniej jedno jedzenie, przekieruj na stronę
-                    orderButton.style.backgroundColor = "#d4edda"; // Zielone tło
-                    orderButton.style.color = "#155724"; // Zielony tekst
-                    setTimeout(() => {
-                        window.location.href = "Strona_Zamówienie_eWybor_AdPlKo.html";
-                    }, 300);
-                } else {
-                    // Jeśli nic nie zaznaczono, podświetl przycisk na czerwono i wyświetl komunikat
-                    orderButton.style.backgroundColor = "#f8d7da"; // Czerwone tło
-                    orderButton.style.color = "#721c24"; // Czerwony tekst
+                // Pobierz zaznaczone jedzenie
+                checkboxes.forEach(checkbox => {
+                    if (checkbox.checked) {
+                        const row = checkbox.closest('tr');
+                        const foodName = row.querySelector('.food-name').textContent;
+                        const foodPrice = parseFloat(row.querySelector('.food-price').textContent.replace('zł', '').trim());
+                        selectedItems.push({ name: foodName, price: foodPrice });
+                        totalPrice += foodPrice;
+                    }
+                });
+    
+                if (selectedItems.length === 0) {
                     alert("Wybierz jedzenie");
+                    return;
                 }
+    
+                // Zapisz dane do localStorage
+                localStorage.setItem('selectedItems', JSON.stringify(selectedItems));
+                localStorage.setItem('totalPrice', totalPrice);
+    
+                // Przekierowanie na stronę podsumowania zamówienia
+                window.location.href = "Strona_Zamówienie_eWybor_AdPlKo.html";
             });
         });
     </script>
@@ -126,53 +135,49 @@
         </div>
     </header>
     <main>
-        <div class="restaurant-header">
-            <div>Restauracja</div>
-            <div>Ocena restauracji: 3/5</div>
-        </div>
         <table class="food-table">
             <thead>
                 <tr>
                     <th>Jedzenie</th>
-                    <th>Skład</th>
+                    <th>Składniki</th>
                     <th>Cena</th>
-                    <th>Dodano</th>
+                    <th>Zaznacz</th>
                 </tr>
             </thead>
             <tbody>
                 <tr>
-                    <td>Pizza</td>
-                    <td>Ser, Sos, Szynka</td>
-                    <td>25 zł</td>
+                    <td class="food-name">Pizza</td>
+                    <td class="food-ingredients">Ser, Sos pomidorowy, Szynka</td>
+                    <td class="food-price">25 zł</td>
                     <td><input type="checkbox"></td>
                 </tr>
                 <tr>
-                    <td>Burger</td>
-                    <td>Bułka, Mięso, Warzywa</td>
-                    <td>20 zł</td>
+                    <td class="food-name">Burger</td>
+                    <td class="food-ingredients">Bułka, Mięso, Sałata</td>
+                    <td class="food-price">20 zł</td>
                     <td><input type="checkbox"></td>
                 </tr>
                 <tr>
-                    <td>Sałatka</td>
-                    <td>Sałata, Pomidor, Ogórek</td>
-                    <td>15 zł</td>
+                    <td class="food-name">Sałatka</td>
+                    <td class="food-ingredients">Sałata, Pomidor, Ogórek</td>
+                    <td class="food-price">15 zł</td>
                     <td><input type="checkbox"></td>
                 </tr>
                 <tr>
-                    <td>Makaron</td>
-                    <td>Makaron, Sos, Ser</td>
-                    <td>18 zł</td>
+                    <td class="food-name">Frytki</td>
+                    <td class="food-ingredients">Ziemniaki, Sól</td>
+                    <td class="food-price">10 zł</td>
                     <td><input type="checkbox"></td>
                 </tr>
                 <tr>
-                    <td>Zupa</td>
-                    <td>Rosół, Marchew, Makaron</td>
-                    <td>10 zł</td>
+                    <td class="food-name">Nuggetsy</td>
+                    <td class="food-ingredients">Kurczak, Panierka</td>
+                    <td class="food-price">18 zł</td>
                     <td><input type="checkbox"></td>
                 </tr>
             </tbody>
         </table>
-        <button id="order-button" class="order-button">Zamów</button>
+        <button id="order-button" class="button">Zamów</button>
     </main>
 </body>
 </html>

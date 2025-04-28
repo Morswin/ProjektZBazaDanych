@@ -85,14 +85,89 @@
             width: 45%;
         }
     </style>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const orderButton = document.getElementById('order-button');
+            const addressInput = document.getElementById('address');
+            const phoneInput = document.getElementById('phone');
+            const emailInput = document.getElementById('email');
+            const paymentMethods = document.querySelectorAll('.payment-methods input[type="radio"]');
+            const orderIcon = document.getElementById('order-icon');
+    
+            orderButton.addEventListener('click', () => {
+                // Resetowanie stylów przycisku
+                orderButton.style.backgroundColor = "";
+                orderButton.style.color = "";
+                orderIcon.textContent = "";
+    
+                // Walidacja danych
+                const address = addressInput.value.trim();
+                const phone = phoneInput.value.trim();
+                const email = emailInput.value.trim();
+                const isPaymentSelected = Array.from(paymentMethods).some(method => method.checked);
+    
+                if (!address || !email || !isPaymentSelected) {
+                    // Jeśli brakuje adresu, e-maila lub metody płatności
+                    orderButton.style.backgroundColor = "#f8d7da"; // Czerwone tło
+                    orderButton.style.color = "#721c24"; // Czerwony tekst
+                    orderIcon.textContent = "✖"; // Ikona X
+                    orderIcon.style.color = "#721c24";
+                    alert("Uzupełnij dane i wybierz metodę płatności");
+                    return;
+                }
+    
+                // Walidacja numeru telefonu
+                if (phone && (!/^\d{9}$/.test(phone))) {
+                    orderButton.style.backgroundColor = "#f8d7da"; // Czerwone tło
+                    orderButton.style.color = "#721c24"; // Czerwony tekst
+                    orderIcon.textContent = "✖"; // Ikona X
+                    orderIcon.style.color = "#721c24";
+                    alert("Błędny numer telefonu");
+                    return;
+                }
+    
+                // Jeśli dane są poprawne
+                orderButton.style.backgroundColor = "#d4edda"; // Zielone tło
+                orderButton.style.color = "#155724"; // Zielony tekst
+                orderIcon.textContent = "✔"; // Ikona ptaszka
+                orderIcon.style.color = "#155724";
+    
+                // Przekierowanie na stronę główną po 300 ms
+                setTimeout(() => {
+                    window.location.href = "Strona_Zamówienie_eWybor_AdPlKo.html";
+                }, 300);
+            });
+        });
+        document.addEventListener('DOMContentLoaded', () => {
+        const orderSummaryTable = document.querySelector('.order-summary tbody');
+        const totalPriceElement = document.querySelector('.order-summary .total-price');
+
+        // Pobierz dane z localStorage
+        const selectedItems = JSON.parse(localStorage.getItem('selectedItems')) || [];
+        const totalPrice = parseFloat(localStorage.getItem('totalPrice')) || 0;
+
+        // Wypełnij tabelę zamówienia
+        selectedItems.forEach(item => {
+            const row = document.createElement('tr');
+            row.innerHTML = `
+                <td>${item.name}</td>
+                <td>${item.price} zł</td>
+            `;
+            orderSummaryTable.appendChild(row);
+        });
+
+        // Wyświetl sumę
+        totalPriceElement.textContent = `${totalPrice.toFixed(2)} zł`;
+    });
+    </script>
 </head>
 <body>
     <header>
         <div>Podsumowanie Zamówienia</div>
         <div class="buttons">
-            <a href="#" class="button">Kontakt</a>
-            <a href="#" class="button">Zaloguj się</a>
-            <a href="#" class="button">Zarejestruj się</a>
+            <a href="Strona_Kontakt.html" class="button">Kontakt</a>
+            <a href="Strona_Logowania.html" class="button">Zaloguj się</a>
+            <a href="Strona_Rejestracja.html" class="button">Zarejestruj się</a>
         </div>
     </header>
     <main>
@@ -100,17 +175,14 @@
             <!-- Wymagane dane -->
             <div class="required-data">
                 <h3>Wymagane dane</h3>
-                <label for="address">Adres:</label>
-                <input type="text" id="address" value="Gnomowa 94/3">
-                
+                <label for="address">Adres: <span style="color: red;">*</span></label>
+                <input type="text" id="address" placeholder="Wpisz adres">
+            
                 <label for="phone">Telefon:</label>
-                <div style="display: flex; gap: 10px;">
-                    <input type="text" id="country-code" value="+48" style="width: 20%;">
-                    <input type="text" id="phone" value="019329423" style="width: 75%;">
-                </div>
-                
-                <label for="email">E-mail:</label>
-                <input type="email" id="email" value="gnom43@gmail.com">
+                <input type="text" id="phone" placeholder="123456789">
+            
+                <label for="email">E-mail: <span style="color: red;">*</span></label>
+                <input type="email" id="email" placeholder="gnom43@gmail.com">
             </div>
             <!-- Zamówienie -->
             <div class="order-summary">
@@ -123,30 +195,19 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr>
-                            <td>Pizza</td>
-                            <td>25 zł</td>
-                        </tr>
-                        <tr>
-                            <td>Burger</td>
-                            <td>20 zł</td>
-                        </tr>
-                        <tr>
-                            <td>Sałatka</td>
-                            <td>15 zł</td>
-                        </tr>
+                        <!-- Wiersze będą dodawane dynamicznie -->
                     </tbody>
                     <tfoot>
                         <tr>
                             <td class="total">Suma:</td>
-                            <td class="total">60 zł</td>
+                            <td class="total total-price">0 zł</td>
                         </tr>
                     </tfoot>
                 </table>
             </div>
             <!-- Metoda płatności -->
             <div class="payment-methods">
-                <h3>Metoda płatności</h3>
+                <h3>Metoda płatności <span style="color: red;">*</span></h3>
                 <label><input type="radio" name="payment" value="blik"> Blik</label>
                 <label><input type="radio" name="payment" value="przelewy24"> Przelewy24</label>
                 <label><input type="radio" name="payment" value="gotowka"> Gotówka</label>
@@ -155,8 +216,8 @@
         </div>
         <!-- Przyciski akcji -->
         <div class="action-buttons">
-            <button class="button">Zamów</button>
-            <button class="button">Anuluj Zamówienie</button>
+            <button id="order-button" class="button">Zamów <span id="order-icon"></span></button>
+            <button class="button"><a href="Strona_Glowna.html" style="text-decoration: none; color: inherit; display: flex; justify-content: center; align-items: center; height: 100%; width: 100%;">Anuluj Zamówienie</a></button>
         </div>
     </main>
 </body>
