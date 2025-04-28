@@ -98,30 +98,158 @@
             transform: scale(1.05);
         }
     </style>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const documentsButton = document.getElementById('documents-button');
+    
+            documentsButton.addEventListener('click', (event) => {
+                event.preventDefault(); // Zapobiega domyślnemu zachowaniu linku
+    
+                // Wyświetlenie komunikatu
+                alert("Wszystkie dokumenty są Aktualne");
+    
+                // Podświetlenie przycisku na zielono
+                documentsButton.style.backgroundColor = "#d4edda"; // Zielone tło
+                documentsButton.style.color = "#155724"; // Zielony tekst
+            });
+        });
+        document.addEventListener('DOMContentLoaded', () => {
+            const form = document.getElementById('add-to-menu-form');
+            const foodNameInput = document.getElementById('food-name');
+            const foodPriceInput = document.getElementById('food-price');
+            const foodIngredientsInput = document.getElementById('food-ingredients');
+            const menuList = document.getElementById('menu-list');
+
+            form.addEventListener('submit', (event) => {
+                event.preventDefault(); // Zapobiega przeładowaniu strony
+
+                const foodName = foodNameInput.value.trim();
+                const foodPrice = foodPriceInput.value.trim();
+                const foodIngredients = foodIngredientsInput.value.trim();
+
+                // Sprawdzenie, czy wszystkie pola są wypełnione
+                if (!foodName || !foodPrice || !foodIngredients) {
+                    alert("Wszystkie pola (Jedzenie, Cena, Składniki) muszą być uzupełnione!");
+                    return;
+                }
+
+                // Sprawdzenie, czy w polu "Cena" są tylko cyfry
+                if (!/^\d+(\.\d{1,2})?$/.test(foodPrice)) {
+                    alert("Pole 'Cena' musi zawierać tylko cyfry (opcjonalnie z maksymalnie dwiema cyframi po kropce)!");
+                    return;
+                }
+
+                // Dodanie nowego produktu do tabeli menu
+                const newRow = document.createElement('tr');
+                newRow.innerHTML = `
+                    <td>${foodName}</td>
+                    <td>${foodIngredients}</td>
+                    <td>${foodPrice} zł</td>
+                `;
+                menuList.appendChild(newRow);
+
+                // Wyczyść pola formularza
+                foodNameInput.value = '';
+                foodPriceInput.value = '';
+                foodIngredientsInput.value = '';
+            });
+        });
+    document.addEventListener('DOMContentLoaded', () => {
+        const acceptedCount = document.getElementById('accepted-count');
+        const deliveredCount = document.getElementById('delivered-count');
+        const canceledCount = document.getElementById('canceled-count');
+        const orderDetails = document.getElementById('order-details');
+        const orderCount = document.getElementById('order-count');
+        const currentOrderNumber = document.getElementById('current-order-number');
+        const actionButtons = document.getElementById('action-buttons');
+
+        // Obsługa przycisków w tabeli zamówień
+        orderDetails.addEventListener('click', (event) => {
+            const target = event.target;
+
+            if (target.classList.contains('accept-button')) {
+                // Zwiększ licznik przyjętych zamówień
+                acceptedCount.textContent = parseInt(acceptedCount.textContent) + 1;
+
+                // Zmień nazwę przycisku na "Odebrane"
+                target.textContent = 'Odebrane';
+                target.classList.remove('accept-button');
+                target.classList.add('delivered-button');
+            } else if (target.classList.contains('delivered-button')) {
+                // Zwiększ licznik odebranych zamówień
+                deliveredCount.textContent = parseInt(deliveredCount.textContent) + 1;
+
+                // Dodaj kolejne zamówienie
+                addNewOrder();
+            } else if (target.classList.contains('cancel-button')) {
+                // Zwiększ licznik anulowanych zamówień
+                canceledCount.textContent = parseInt(canceledCount.textContent) + 1;
+
+                // Dodaj kolejne zamówienie
+                addNewOrder();
+            }
+        });
+
+        // Funkcja dodająca nowe zamówienie
+        function addNewOrder() {
+            // Zwiększ licznik zamówień w górnej tabeli
+            const nextOrderNumber = parseInt(orderCount.textContent) + 1;
+            orderCount.textContent = nextOrderNumber;
+
+            // Ustaw licznik w dolnej tabeli jako o jeden większy
+            currentOrderNumber.textContent = nextOrderNumber;
+
+            // Zresetuj tabelę zamówień dla nowego zamówienia
+            orderDetails.innerHTML = `
+                <tr>
+                    <td id="current-order-number" rowspan="3">${nextOrderNumber}</td>
+                    <td>Pizza</td>
+                    <td>Ser, Sos, Szynka</td>
+                    <td id="action-buttons" rowspan="3">
+                        <button class="accept-button">Przyjmij</button>
+                        <button class="cancel-button">Anuluj</button>
+                    </td>
+                </tr>
+                <tr>
+                    <td>Burger</td>
+                    <td>Bułka, Mięso, Warzywa</td>
+                </tr>
+                <tr>
+                    <td>Sałatka</td>
+                    <td>Sałata, Pomidor, Ogórek</td>
+                </tr>
+            `;
+        }
+
+        // Przykład dodania nowego jedzenia do istniejącego zamówienia
+        addNewOrder(); // Dodaj pierwsze zamówienie
+    });
+        
+    </script>
 </head>
 <body>
     <header>
         <div>Strona Główna Restauracji</div>
         <div class="rating-header">Ocena: 3/5</div>
         <div class="buttons">
-            <a href="#" class="button">Kontakt</a>
-            <a href="#" class="button">Dokumenty</a>
-            <a href="#" class="button">Wyloguj się</a>
+            <a href="Strona_Kontakt.html" class="button">Kontakt</a>
+            <a href="#" id="documents-button" class="button">Dokumenty</a>
+            <a href="Strona_Glowna.html" class="button">Wyloguj się</a>
         </div>
     </header>
     <main>
         <!-- Menu -->
-        <div class="menu">
+        <div class="menu" style="max-height: 300px; overflow-y: auto;">
             <h3>Menu</h3>
             <table>
                 <thead>
                     <tr>
                         <th>Jedzenie</th>
-                        <th>Opis</th>
+                        <th>Składniki</th>
                         <th>Cena</th>
                     </tr>
                 </thead>
-                <tbody>
+                <tbody id="menu-list">
                     <tr>
                         <td>Pizza</td>
                         <td>Ser, Sos, Szynka</td>
@@ -140,42 +268,67 @@
                 </tbody>
             </table>
         </div>
+    
         <!-- Zamówienia -->
-        <div class="orders">
+        <div class="orders" style="margin-top: 20px;">
             <h3>Zamówienia</h3>
             <table>
                 <thead>
                     <tr>
                         <th>Zamówienie</th>
-                        <th>Przyjęte </th>
-                        <th>Odebrane </th>
-                        <th>Anulowane </th>
+                        <th>Przyjęte</th>
+                        <th>Odebrane</th>
+                        <th>Anulowane</th>
                     </tr>
                 </thead>
                 <tbody>
                     <tr>
-                        <td>1</td>
-                        <td>3</td>
-                        <td>5</td>
-                        <td>1</td>
+                        <td id="order-count">0</td>
+                        <td id="accepted-count">0</td>
+                        <td id="delivered-count">0</td>
+                        <td id="canceled-count">0</td>
                     </tr>
                 </tbody>
             </table>
-        </div>
-        <!-- Dodaj do menu -->
-<div class="add-to-menu">
-    <h3>Dodaj do menu</h3>
-    <form>
-        <div class="row">
-            <div style="display: flex; flex-direction: column; gap: 10px; width: 30%;">
-                <input type="text" placeholder="Jedzenie">
-                <input type="text" placeholder="Cena">
-                <button type="submit">Dodaj</button>
+            <div class="order-actions" style="margin-top: 20px;">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Zamówienie</th>
+                            <th>Jedzenie</th>
+                            <th>Składniki</th>
+                            <th>Akcje</th>
+                        </tr>
+                    </thead>
+                    <tbody id="order-details">
+                        <tr>
+                            <td id="current-order-number" rowspan="1">1</td> <!-- Kolumna "Zamówienie" -->
+                            <td>Pizza</td> <!-- Kolumna "Jedzenie" -->
+                            <td>Ser, Sos, Szynka</td> <!-- Kolumna "Składniki" -->
+                            <td id="action-buttons" rowspan="1"> <!-- Kolumna "Akcje" -->
+                                <button class="accept-button">Przyjmij</button>
+                                <button class="cancel-button">Anuluj</button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
             </div>
-            <textarea placeholder="Opis" style="flex: 1; height: 150px;"></textarea>
         </div>
-    </form>
-</div>
+    
+        <!-- Dodaj do menu -->
+        <div class="add-to-menu">
+            <h3>Dodaj do menu</h3>
+            <form id="add-to-menu-form">
+                <div class="row">
+                    <div style="display: flex; flex-direction: column; gap: 10px; width: 30%;">
+                        <input type="text" id="food-name" placeholder="Jedzenie">
+                        <input type="text" id="food-price" placeholder="Cena">
+                        <button type="submit">Dodaj</button>
+                    </div>
+                    <textarea id="food-ingredients" placeholder="Składniki" style="flex: 1; height: 150px;"></textarea>
+                </div>
+            </form>
+        </div>
     </main>
 </body>
 </html>

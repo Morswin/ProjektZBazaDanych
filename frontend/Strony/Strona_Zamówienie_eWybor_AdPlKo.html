@@ -159,6 +159,58 @@
         // Wyświetl sumę
         totalPriceElement.textContent = `${totalPrice.toFixed(2)} zł`;
     });
+        document.addEventListener('DOMContentLoaded', () => {
+            const orderButton = document.getElementById('order-button');
+            const addressInput = document.getElementById('address');
+            const phoneInput = document.getElementById('phone');
+            const emailInput = document.getElementById('email');
+            const paymentMethods = document.querySelectorAll('.payment-methods input[type="radio"]');
+            const orderIcon = document.getElementById('order-icon');
+
+            orderButton.addEventListener('click', () => {
+                // Resetowanie stylów przycisku
+                orderButton.style.backgroundColor = "";
+                orderButton.style.color = "";
+                orderIcon.textContent = "";
+
+                // Walidacja danych
+                const address = addressInput.value.trim();
+                const phone = phoneInput.value.trim();
+                const email = emailInput.value.trim();
+                const isPaymentSelected = Array.from(paymentMethods).some(method => method.checked);
+
+                if (!address || !email || !isPaymentSelected) {
+                    // Jeśli brakuje adresu, e-maila lub metody płatności
+                    orderButton.style.backgroundColor = "#f8d7da"; // Czerwone tło
+                    orderButton.style.color = "#721c24"; // Czerwony tekst
+                    orderIcon.textContent = "✖"; // Ikona X
+                    orderIcon.style.color = "#721c24";
+                    alert("Uzupełnij dane i wybierz metodę płatności");
+                    return;
+                }
+
+                // Walidacja numeru telefonu
+                if (phone && (!/^\d{9}$/.test(phone))) {
+                    orderButton.style.backgroundColor = "#f8d7da"; // Czerwone tło
+                    orderButton.style.color = "#721c24"; // Czerwony tekst
+                    orderIcon.textContent = "✖"; // Ikona X
+                    orderIcon.style.color = "#721c24";
+                    alert("Błędny numer telefonu");
+                    return;
+                }
+
+                // Jeśli dane są poprawne
+                orderButton.style.backgroundColor = "#d4edda"; // Zielone tło
+                orderButton.style.color = "#155724"; // Zielony tekst
+                orderIcon.textContent = "✔"; // Ikona ptaszka
+                orderIcon.style.color = "#155724";
+
+                // Przekierowanie na stronę "Strona_Zamówienie_eWybor_Oczekiwanie.html" po 300 ms
+                setTimeout(() => {
+                    window.location.href = "Strona_Zamówienie_eWybor_Oczekiwanie.html";
+                }, 300);
+            });
+        });
     </script>
 </head>
 <body>
@@ -216,8 +268,10 @@
         </div>
         <!-- Przyciski akcji -->
         <div class="action-buttons">
-            <button id="order-button" class="button">Zamów <span id="order-icon"></span></button>
-            <button class="button"><a href="Strona_Glowna.html" style="text-decoration: none; color: inherit; display: flex; justify-content: center; align-items: center; height: 100%; width: 100%;">Anuluj Zamówienie</a></button>
+            <button id="order-button" class="button">Zamów<span id="order-icon"></span></button>
+            <button class="button">
+                <a href="Strona_Glowna.html" style="text-decoration: none; color: inherit; display: flex; justify-content: center; align-items: center; height: 100%; width: 100%;">Anuluj Zamówienie</a>
+            </button>
         </div>
     </main>
 </body>

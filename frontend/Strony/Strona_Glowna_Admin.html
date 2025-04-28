@@ -5,11 +5,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Strona Główna Admin</title>
     <style>
+        /* Ogólne ustawienia */
         body {
             font-family: Arial, sans-serif;
             margin: 0;
             padding: 0;
         }
+    
         header {
             display: flex;
             justify-content: space-between;
@@ -17,11 +19,24 @@
             background-color: #f4f4f4;
             padding: 10px 20px;
             border-bottom: 2px solid black;
+            position: relative;
         }
+    
+        .admin-info-header {
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 20px;
+            font-size: 1em;
+            font-weight: bold;
+        }
+    
         .buttons {
             display: flex;
             gap: 10px;
         }
+    
         .button {
             display: flex;
             justify-content: center;
@@ -36,100 +51,266 @@
             cursor: pointer;
             transition: background-color 0.3s, transform 0.2s;
         }
+    
         .button:hover {
             background-color: #e0e0e0;
             transform: scale(1.05);
         }
+    
+        /* Układ główny */
         main {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
+            display: grid;
+            grid-template-columns: 40% 40% 20%; /* Zgłoszenia: 40%, Odpowiedź: 40%, Przyciski: 20% */
+            gap: 20px;
             padding: 20px;
         }
-        .admin-info {
-            display: flex;
-            justify-content: space-between;
-            width: 80%;
-            margin-bottom: 20px;
-            font-size: 1em;
-            font-weight: bold;
-        }
-        .admin-info div {
-            border: 1px solid black;
-            padding: 10px;
-            text-align: center;
-            width: 30%;
-        }
-        .report-container {
-            display: grid;
-            grid-template-columns: 1fr 1fr 1fr 1fr;
-            gap: 10px;
-            width: 80%;
+    
+        .reports-section,
+        .response-section,
+        .tables-section {
             border: 2px solid black;
             padding: 20px;
             background-color: #f9f9f9;
         }
-        .report-container div {
-            border: 1px solid black;
-            padding: 10px;
+    
+        .reports-section h3,
+        .response-section h3 {
             text-align: center;
+            margin-bottom: 20px;
         }
-        .action-buttons {
+    
+        /* Sekcja zgłoszeń */
+        .report-details div {
             display: flex;
-            justify-content: space-between;
-            width: 80%;
-            margin-top: 20px;
+            flex-direction: column;
+            margin-bottom: 10px;
         }
-        .action-buttons .button {
-            width: 48%;
+    
+        .report-details label {
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+    
+        .report-details input,
+        .report-details textarea {
+            padding: 10px;
+            border: 1px solid black;
+            font-size: 1em;
+        }
+    
+        /* Zmniejszenie szerokości pól "Imię" i "Przyczyna" */
+        .report-details input,
+        .report-details textarea:first-of-type {
+            width: 75%; /* 75% szerokości kontenera */
+        }
+    
+        /* Zwiększenie wysokości pola "Opis" */
+        .report-details textarea:nth-of-type(2) {
+            height: 200px; /* Dwukrotna wysokość */
+        }
+    
+        /* Sekcja odpowiedzi */
+        .response-section textarea {
+            width: 95%;
+            height: 150px;
+            margin-bottom: 10px;
+            padding: 10px;
+            border: 1px solid black;
+            font-size: 1em;
+        }
+        /* Sekcja zgłoszeń */
+        .report-details textarea[placeholder="Opis"] {
+            height: 150px; /* Taka sama wysokość jak pole "Odpowiedź" */
+        }
+
+        /* Sekcja odpowiedzi */
+        .response-section textarea {
+            width: 95%;
+            height: 150px; /* Wysokość pola odpowiedzi */
+            margin-bottom: 10px;
+            padding: 10px;
+            border: 1px solid black;
+            font-size: 1em;
+        }
+        /* Zwiększenie wysokości pola "Opis" */
+        .report-details textarea[placeholder="Opis"] {
+            height: 150px; /* Taka sama wysokość jak pole "Odpowiedź" */
+        }
+    
+        .response-section .button {
+            display: block;
+            width: 50%;
+            padding: 10px;
+            font-size: 1em; 
+            font-weight: bold;
+            text-align: center;
+            background-color: #f4f4f4;
+            border: 2px solid black;
+            cursor: pointer;
+            transition: background-color 0.3s, transform 0.2s;
+            margin: 0 auto; /* Wyśrodkowanie przycisku */   
+        }
+    
+        .response-section .button:hover {
+            background-color: #e0e0e0;
+            transform: scale(1.05);
+        }
+    
+        /* Sekcja tabel */
+        .tables-section {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+    
+        .tables-section .button {
+            width: 100%;
+            padding: 10px;
+            font-size: 1em;
+            font-weight: bold;
+            text-align: center;
+            background-color: #f4f4f4;
+            border: 2px solid black;
+            cursor: pointer;
+            transition: background-color 0.3s, transform 0.2s;
+        }
+    
+        .tables-section .button:hover {
+            background-color: #e0e0e0;
+            transform: scale(1.05);
         }
     </style>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const reportCountElement = document.querySelector('.admin-info-header span:nth-child(1)');
+            const timeLeftElement = document.querySelector('.admin-info-header span:nth-child(2)');
+            const sendButton = document.querySelector('.report-container .button');
+    
+            let reportCount = 5; // Początkowa liczba zgłoszeń
+            let timeLeft = 8; // Początkowy czas w godzinach
+    
+            // Funkcja zmniejszająca czas co minutę
+            function decreaseTime() {
+                if (timeLeft > 0) {
+                    timeLeft = parseFloat((timeLeft - 0.01).toFixed(2)); // Zmniejsz o 0,01 i zaokrąglij do 2 miejsc po przecinku
+                    timeLeftElement.textContent = `Zostało: ${timeLeft}H`;
+                } else {
+                    timeLeftElement.textContent = "Jesteś wolny"; // Zmień tekst, gdy czas osiągnie 0
+                    clearInterval(timeInterval); // Zatrzymaj interwał
+                }
+            }
+    
+            // Uruchom zmniejszanie czasu co minutę
+            const timeInterval = setInterval(decreaseTime, 60000); // 60000 ms = 1 minuta
+    
+            // Obsługa kliknięcia przycisku "Wyślij"
+            sendButton.addEventListener('click', () => {
+                if (reportCount > 0) {
+                    reportCount--; // Zmniejsz licznik zgłoszeń
+                    reportCountElement.textContent = `Zgłoszenia: ${reportCount}`;
+    
+                    // Jeśli licznik zgłoszeń osiągnie 0, wyłącz przycisk
+                    if (reportCount === 0) {
+                        alert("Wszystkie zgłoszenia zostały obsłużone!");
+                        sendButton.disabled = true; // Wyłącz przycisk
+                    }
+                }
+            });
+        });
+        document.addEventListener('DOMContentLoaded', () => {
+            const reportCountElement = document.querySelector('.admin-info-header span:nth-child(1)');
+            const sendButton = document.querySelector('.response-section .button');
+            const responseTextarea = document.querySelector('.response-section textarea');
+            const responseHeader = document.querySelector('.response-section h3');
+
+            let reportCount = 5; // Początkowa liczba zgłoszeń
+
+            // Obsługa kliknięcia przycisku "Wyślij"
+            sendButton.addEventListener('click', () => {
+                const responseValue = responseTextarea.value.trim(); // Pobierz wartość odpowiedzi
+
+                if (responseValue) {
+                    // Jeśli coś jest wpisane
+                    responseTextarea.style.borderColor = 'green'; // Podświetlenie na zielono
+                    responseHeader.innerHTML = 'Odpowiedź <span style="color: green;">✔</span>'; // Dodanie ptaszka
+                    setTimeout(() => {
+                        responseHeader.innerHTML = 'Odpowiedź'; // Przywrócenie oryginalnego nagłówka
+                    }, 500);
+
+                    // Zmniejsz licznik zgłoszeń
+                    if (reportCount > 0) {
+                        reportCount--;
+                        reportCountElement.textContent = `Zgłoszenia: ${reportCount}`;
+                    }
+
+                    // Jeśli licznik zgłoszeń osiągnie 0, wyłącz przycisk
+                    if (reportCount === 0) {
+                        alert("Wszystkie zgłoszenia zostały obsłużone!");
+                        sendButton.disabled = true; // Wyłącz przycisk
+                    }
+
+                    // Wyczyść pole odpowiedzi
+                    responseTextarea.value = '';
+                } else {
+                    // Jeśli nic nie jest wpisane
+                    responseTextarea.style.borderColor = 'red'; // Podświetlenie na czerwono
+                    responseHeader.innerHTML = 'Odpowiedź <span style="color: red;">✘</span>'; // Dodanie X
+                    setTimeout(() => {
+                        responseHeader.innerHTML = 'Odpowiedź'; // Przywrócenie oryginalnego nagłówka
+                    }, 500);
+
+                    // Wyświetlenie komunikatu
+                    alert("Masz odpowiedzieć na zgłoszenie!!!");
+                }
+            });
+        });
+    </script>
 </head>
 <body>
     <header>
         <div>Strona Główna Admin</div>
+        <div class="admin-info-header">
+            <span>Zgłoszenia: 5</span>
+            <span>Zostało: 4,5H</span>
+        </div>
         <div class="buttons">
             <a href="#" class="button">Godziny</a>
-            <a href="#" class="button">Bazy danych</a>
-            <a href="#" class="button">Wyloguj się</a>
+            <a href="Strona_Glowna.html" class="button">Wyloguj się</a>
         </div>
     </header>
     <main>
-        <!-- Informacje o adminie -->
-        <div class="admin-info">
-            <div>Zgłoszenia: 5</div>
-            <div>Zostało: 4,5H</div>
-        </div>
-        <!-- Kontener zgłoszeń -->
-        <div class="report-container">
-            <div>Kto</div>
-            <div>Przyczyna</div>
-            <div>Opis</div>
-            <div>Dane Kontaktowe</div>
-            <div>Gnom</div>
-            <div>Kradzież</div>
-            <div>Ukradli Gnomowi jedzenie</div>
-            <div>
-                <div>549124821</div>
-                <div>gnom43@gmail.com</div>
-            </div>
-            <div>Odpowiedź</div>
-            <div colspan="3">
-                <textarea style="width: 100%; height: 100px;">Przyjąłem kradzież, wysyłam Gnomy!</textarea>
-            </div>
-            <div>
-                <button class="button">Wyślij</button>
+        <!-- Sekcja zgłoszeń -->
+        <div class="reports-section">
+            <h3>Zgłoszenie</h3>
+            <div class="report-details">
+                <div>
+                    <label>Jaki użytkownik</label>
+                    <input type="text" placeholder="Imię" readonly>
+                </div>
+                <div>
+                    <label>Przyczyna</label>
+                    <textarea placeholder="Przyczyna" readonly></textarea>
+                </div>
+                <div>
+                    <label>Opis</label>
+                    <textarea placeholder="Opis" readonly></textarea>
+                </div>
             </div>
         </div>
-        <!-- Przyciski akcji -->
-        <div class="action-buttons">
-            <button class="button">Zmień Kuriera</button>
-            <button class="button">Kontakt z Restauracją</button>
+    
+        <!-- Sekcja odpowiedzi -->
+        <div class="response-section">
+            <h3>Odpowiedź</h3>
+            <textarea placeholder="Odpowiedź"></textarea>
+            <button class="button">Wyślij</button>
         </div>
-        <!-- Dodatkowe przyciski -->
-        <div class="action-buttons">
-            <button class="button">Zarządzaj Użytkownikami</button>
-            <button class="button">Zarządzaj Gośćmi</button>
+    
+        <!-- Sekcja tabel -->
+        <div class="tables-section">
+            <button class="button">Tabela Kurierów</button>
+            <button class="button">Tabela Restauracji</button>
+            <button class="button">Tabela Użytkowników</button>
+            <button class="button">Tabela Gości</button>
         </div>
     </main>
 </body>
