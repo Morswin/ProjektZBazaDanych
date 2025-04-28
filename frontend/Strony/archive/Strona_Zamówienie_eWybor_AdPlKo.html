@@ -10,6 +10,7 @@
             margin: 0;
             padding: 0;
         }
+    
         header {
             display: flex;
             justify-content: space-between;
@@ -18,14 +19,15 @@
             padding: 10px 20px;
             border-bottom: 2px solid black;
         }
+    
         .buttons {
             display: flex;
             gap: 10px;
         }
+    
         .button {
-            display: flex;
-            justify-content: center;
-            align-items: center;
+            display: inline-block;
+            text-align: center;
             padding: 10px 20px;
             border: 2px solid black;
             font-size: 1em;
@@ -36,16 +38,19 @@
             cursor: pointer;
             transition: background-color 0.3s, transform 0.2s;
         }
+    
         .button:hover {
             background-color: #e0e0e0;
             transform: scale(1.05);
         }
+    
         main {
             display: flex;
             flex-direction: column;
             align-items: center;
             padding: 20px;
         }
+    
         .summary-container {
             display: grid;
             grid-template-columns: 2fr 2fr 1fr;
@@ -55,34 +60,55 @@
             padding: 20px;
             background-color: #f9f9f9;
         }
-        .required-data, .order-summary, .payment-methods {
+    
+        .required-data,
+        .order-summary,
+        .payment-methods {
             border: 1px solid black;
             padding: 10px;
         }
-        .required-data label, .payment-methods label {
+    
+        .required-data label,
+        .payment-methods label {
             display: block;
             margin-bottom: 10px;
         }
+    
         .order-summary table {
             width: 100%;
             border-collapse: collapse;
         }
-        .order-summary th, .order-summary td {
+    
+        .order-summary th,
+        .order-summary td {
             border: 1px solid black;
             padding: 10px;
             text-align: center;
         }
+    
         .order-summary .total {
             font-weight: bold;
         }
+    
         .action-buttons {
             display: flex;
             justify-content: space-between;
             width: 80%;
             margin-top: 20px;
         }
+    
         .action-buttons .button {
             width: 45%;
+        }
+    
+        /* Styl dla przycisku "Zamów" */
+        .button.order-success {
+            background-color: #d4edda;
+            color: #155724;
+        }
+    
+        .button.order-success:hover {
+            background-color: #c3e6cb;
         }
     </style>
     <script>
@@ -94,8 +120,12 @@
             const paymentMethods = document.querySelectorAll('.payment-methods input[type="radio"]');
             const orderIcon = document.getElementById('order-icon');
     
-            orderButton.addEventListener('click', () => {
+            orderButton.addEventListener('click', (event) => {
+                // Zapobiegnięcie domyślnej akcji przekierowania
+                event.preventDefault();
+    
                 // Resetowanie stylów przycisku
+                orderButton.classList.remove('order-success');
                 orderButton.style.backgroundColor = "";
                 orderButton.style.color = "";
                 orderIcon.textContent = "";
@@ -127,89 +157,35 @@
                 }
     
                 // Jeśli dane są poprawne
-                orderButton.style.backgroundColor = "#d4edda"; // Zielone tło
-                orderButton.style.color = "#155724"; // Zielony tekst
+                orderButton.classList.add('order-success');
                 orderIcon.textContent = "✔"; // Ikona ptaszka
                 orderIcon.style.color = "#155724";
     
-                // Przekierowanie na stronę główną po 300 ms
-                setTimeout(() => {
-                    window.location.href = "Strona_Zamówienie_eWybor_AdPlKo.html";
-                }, 300);
+                // Przekierowanie na stronę główną
+                window.location.href = "Strona_Zamówienie_eWybor_Oczekiwanie.html";
             });
         });
+    
         document.addEventListener('DOMContentLoaded', () => {
-        const orderSummaryTable = document.querySelector('.order-summary tbody');
-        const totalPriceElement = document.querySelector('.order-summary .total-price');
-
-        // Pobierz dane z localStorage
-        const selectedItems = JSON.parse(localStorage.getItem('selectedItems')) || [];
-        const totalPrice = parseFloat(localStorage.getItem('totalPrice')) || 0;
-
-        // Wypełnij tabelę zamówienia
-        selectedItems.forEach(item => {
-            const row = document.createElement('tr');
-            row.innerHTML = `
-                <td>${item.name}</td>
-                <td>${item.price} zł</td>
-            `;
-            orderSummaryTable.appendChild(row);
-        });
-
-        // Wyświetl sumę
-        totalPriceElement.textContent = `${totalPrice.toFixed(2)} zł`;
-    });
-        document.addEventListener('DOMContentLoaded', () => {
-            const orderButton = document.getElementById('order-button');
-            const addressInput = document.getElementById('address');
-            const phoneInput = document.getElementById('phone');
-            const emailInput = document.getElementById('email');
-            const paymentMethods = document.querySelectorAll('.payment-methods input[type="radio"]');
-            const orderIcon = document.getElementById('order-icon');
-
-            orderButton.addEventListener('click', () => {
-                // Resetowanie stylów przycisku
-                orderButton.style.backgroundColor = "";
-                orderButton.style.color = "";
-                orderIcon.textContent = "";
-
-                // Walidacja danych
-                const address = addressInput.value.trim();
-                const phone = phoneInput.value.trim();
-                const email = emailInput.value.trim();
-                const isPaymentSelected = Array.from(paymentMethods).some(method => method.checked);
-
-                if (!address || !email || !isPaymentSelected) {
-                    // Jeśli brakuje adresu, e-maila lub metody płatności
-                    orderButton.style.backgroundColor = "#f8d7da"; // Czerwone tło
-                    orderButton.style.color = "#721c24"; // Czerwony tekst
-                    orderIcon.textContent = "✖"; // Ikona X
-                    orderIcon.style.color = "#721c24";
-                    alert("Uzupełnij dane i wybierz metodę płatności");
-                    return;
-                }
-
-                // Walidacja numeru telefonu
-                if (phone && (!/^\d{9}$/.test(phone))) {
-                    orderButton.style.backgroundColor = "#f8d7da"; // Czerwone tło
-                    orderButton.style.color = "#721c24"; // Czerwony tekst
-                    orderIcon.textContent = "✖"; // Ikona X
-                    orderIcon.style.color = "#721c24";
-                    alert("Błędny numer telefonu");
-                    return;
-                }
-
-                // Jeśli dane są poprawne
-                orderButton.style.backgroundColor = "#d4edda"; // Zielone tło
-                orderButton.style.color = "#155724"; // Zielony tekst
-                orderIcon.textContent = "✔"; // Ikona ptaszka
-                orderIcon.style.color = "#155724";
-
-                // Przekierowanie na stronę "Strona_Zamówienie_eWybor_Oczekiwanie.html" po 300 ms
-                setTimeout(() => {
-                    window.location.href = "Strona_Zamówienie_eWybor_Oczekiwanie.html";
-                }, 300);
+            const orderSummaryTable = document.querySelector('.order-summary tbody');
+            const totalPriceElement = document.querySelector('.order-summary .total-price');
+    
+            // Pobierz dane z localStorage
+            const selectedItems = JSON.parse(localStorage.getItem('selectedItems')) || [];
+            const totalPrice = parseFloat(localStorage.getItem('totalPrice')) || 0;
+    
+            // Wypełnij tabelę zamówienia
+            selectedItems.forEach(item => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${item.name}</td>
+                    <td>${item.price} zł</td>
+                `;
+                orderSummaryTable.appendChild(row);
             });
+    
+            // Wyświetl sumę
+            totalPriceElement.textContent = `${totalPrice.toFixed(2)} zł`;
         });
     </script>
 </head>
@@ -268,10 +244,9 @@
         </div>
         <!-- Przyciski akcji -->
         <div class="action-buttons">
-            <button id="order-button" class="button">Zamów<span id="order-icon"></span></button>
-            <button class="button">
-                <a href="Strona_Glowna.html" style="text-decoration: none; color: inherit; display: flex; justify-content: center; align-items: center; height: 100%; width: 100%;">Anuluj Zamówienie</a>
-            </button>
+            <button class="button" id="order-button">Zamów<span id="order-icon"></span></button>
+
+            <a href="Strona_Głowna.html" class="button">Anuluj Zamówienie</a>
         </div>
     </main>
 </body>

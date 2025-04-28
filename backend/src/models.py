@@ -10,16 +10,16 @@ class OrderHistory(SQLModel, table=True):
     __tablename__ = "order_history"
 
     # Keys
-    id_order: int | None = Field(default=None, foreign_key="order.id_order", primary_key=True)
-    id_user: int | None = Field(default=None, foreign_key="user.id_user", primary_key=True)
+    id_order: int | None = Field(default=None, foreign_key="order.id", primary_key=True)
+    id_user: int | None = Field(default=None, foreign_key="user.id", primary_key=True)
 
 
 class AddressList(SQLModel, table=True):
     __tablename__ = "address_list"
 
     #keys
-    id_user: int | None = Field(default=None, foreign_key="user.id_user", primary_key=True)
-    id_address: int | None = Field(default=None, foreign_key="address.id_address", primary_key=True)
+    id_user: int | None = Field(default=None, foreign_key="user.id", primary_key=True)
+    id_address: int | None = Field(default=None, foreign_key="address.id", primary_key=True)
 
 
 class UserType(Enum):
@@ -40,7 +40,7 @@ class User(SQLModel, table=True):
     __tablename__ = "user"
 
     # Keys
-    id_user: int | None = Field(default=None, primary_key=True)
+    id: int | None = Field(default=None, primary_key=True)
 
     # Relations
     orders: list["Order"] = Relationship(back_populates="users", link_model=OrderHistory)
@@ -73,7 +73,8 @@ class Ticket(SQLModel, table=True):
     __tablename__ = "ticket"
 
     # Keys
-    id_ticket: int | None = Field(default=None, primary_key=True)
+    id: int | None = Field(default=None, primary_key=True)
+    user_id: int | None = Field(default=None, foreign_key="user.id")
 
     # Relations
     user: User | None = Relationship(back_populates="tickets")
@@ -89,7 +90,7 @@ class Address(SQLModel, table=True):
     __tablename__ = "address"
 
     # Keys
-    id_address: int | None = Field(default=None, primary_key=True)
+    id: int | None = Field(default=None, primary_key=True)
 
     # Relations
     orders: list["Order"] = Relationship(back_populates="address")
@@ -106,7 +107,7 @@ class Hours(SQLModel, table=True):
     __tablename__ = "hours"
 
     # Keys
-    id_hours: int | None = Field(default=None, primary_key=True)
+    id: int | None = Field(default=None, primary_key=True)
 
     # Relations
     restaurants: list["Restaurant"] = Relationship(back_populates="hours")
@@ -122,7 +123,7 @@ class Score(SQLModel, table=True):
     __tablename__ = "score"
 
     # Keys
-    id_score: int | None = Field(default=None, primary_key=True)
+    id: int | None = Field(default=None, primary_key=True)
 
     # Relations
     restaurants: list["Restaurant"] = Relationship(back_populates="score")
@@ -137,11 +138,13 @@ class Restaurant(SQLModel, table=True):
     __tablename__ = "restaurant"
 
     # Keys
-    id_restaurant: int | None = Field(default=None, primary_key=True)
+    id: int | None = Field(default=None, primary_key=True)
+    hours_id: int | None = Field(default=None, foreign_key="hours.id")
+    score_id: int | None = Field(default=None, foreign_key="score.id")
 
     # Relations
     orders: list["Order"] = Relationship(back_populates="restaurant")
-    foods: list["Restaurant"] = Relationship(back_populates="restaurant")
+    foods: list["Food"] = Relationship(back_populates="restaurant")
     hours: Hours | None = Relationship(back_populates="restaurants")
     score: Score | None = Relationship(back_populates="restaurants")
 
@@ -165,14 +168,17 @@ class Order(SQLModel, table=True):
     __tablename__ = "order"
 
     # Keys
-    id_order: int | None = Field(default=None, primary_key=True)
+    id: int | None = Field(default=None, primary_key=True)
+    address_id: int | None = Field(default=None, foreign_key="address.id")
+    restaurant_id: int | None = Field(default=None, foreign_key="restaurant.id")
+    ticket_id: int | None = Field(default=None, foreign_key="ticket.id")
 
     # Relations
     users: list["User"] = Relationship(back_populates="orders", link_model=OrderHistory)
     food_orders: list["FoodOrder"] = Relationship(back_populates="order")
     address: Address | None = Relationship(back_populates="orders")
     restaurant: Restaurant | None = Relationship(back_populates="orders")
-    ticket: Ticket | None = Relationship(back_populates="orders")
+    tickets: Ticket | None = Relationship(back_populates="orders")
 
     # Fields
     status: OrderStatus
@@ -187,7 +193,8 @@ class Food(SQLModel, table=True):
     __tablename__ = "food"
 
     # Keys
-    id_food: int | None = Field(default=None, primary_key=True)
+    id: int | None = Field(default=None, primary_key=True)
+    restaurant_id: int | None = Field(default=None, foreign_key="restaurant.id")
 
     # Reltaions
     food_orders: list["FoodOrder"] = Relationship(back_populates="food")
@@ -204,7 +211,9 @@ class FoodOrder(SQLModel, table=True):
     __tablename__ = "food_order"
 
     # Keys
-    id_food_order: int | None = Field(default=None, primary_key=True)
+    id: int | None = Field(default=None, primary_key=True)
+    order_id: int | None = Field(default=None, foreign_key="order.id")
+    food_id: int | None = Field(default=None, foreign_key="food.id")
 
     # Relations
     order: Order | None = Relationship(back_populates="food_orders")
@@ -218,7 +227,7 @@ class VehicleType(SQLModel, table=True):
     __tablename__ = "vehicle_type"
 
     # Keys
-    id_vehicle_type: int | None = Field(default=None, primary_key=True)
+    id: int | None = Field(default=None, primary_key=True)
 
     # Relations
     vehicles: list["Vehicle"] = Relationship(back_populates="vehicle_type")
@@ -232,7 +241,8 @@ class Vehicle(SQLModel, table=True):
     __tablename__ = "vehicle"
 
     # Keys
-    id_vehicle: int | None = Field(default=None, primary_key=True)
+    id: int | None = Field(default=None, primary_key=True)
+    vehicle_type_id: int | None = Field(default=None, foreign_key="vehicle_type.id")
 
     # Relations
     drivers: list["Driver"] = Relationship(back_populates="vehicle")
@@ -247,7 +257,11 @@ class Driver(SQLModel, table=True):
     __tablename__ = "driver"
 
     # Keys
-    id_driver: int | None = Field(default=None, primary_key=True)
+    id: int | None = Field(default=None, primary_key=True)
+    vehicle_id: int | None = Field(default=None, foreign_key="vehicle.id")
+    hours_id: int | None = Field(default=None, foreign_key="hours.id")
+    user_id: int | None = Field(default=None, foreign_key="user.id")
+    score_id: int | None = Field(default=None, foreign_key="score.id")
 
     # Relations
     vehicle: Vehicle | None = Relationship(back_populates="drivers")
