@@ -11,29 +11,43 @@
     <header>
         <a href="home_page.html" class="main_page_back"><h2>placeholder</h2></a>
     </header>
-    <div class="center_div">
+    <main>
         <form id="reg_form">
-            <label for="fname_r">Name:</label><br>
+            <label for="fname_r">Name: <span class="red_star">*</span></label><br>
             <input type="text" id="fname_r" name="fnameRegister" placeholder="Name"><br>
 
-            <label for="sname_r">Surname:</label><br>
+            <label for="sname_r">Surname: <span class="red_star">*</span></label><br>
             <input type="text" id="sname_r" name="snameRegister" placeholder="Surname"><br>
 
-            <label for="email_r">Email:</label><br>
+            <label for="gender_r">Gender: <span class="red_star">*</span></label><br>
+                <select id="gender_r" name="genderSelect">
+                    <option value="" disabled selected>Choose gender</option>
+                    <option value="male">Male</option>
+                    <option value="female">Female</option>
+                    <option value="other">Other</option>
+                </select><br>
+
+            <label for="email_r">Email: <span class="red_star">*</span></label><br>
             <input type="email" id="email_r" name="emailRegister" placeholder="example@gmail.com"><br>
 
-            <label for="pass_one_r">Password:</label><br>
+            <label for="phone_r">Phone number: <span class="red_star">*</span></label><br>
+            <input type="tel" id="phone_r" name="phoneNum"><br>
+
+            <label for="pass_one_r">Password: <span class="red_star">*</span></label><br>
             <input id="pass_one_r" name="passOneRegister" type="password"><br>
 
-            <label for="pass_confirm_r">Confirm password:</label><br>
+            <label for="pass_confirm_r">Confirm password: <span class="red_star">*</span></label><br>
             <input type="password" id="pass_confirm_r" name="passTwoRegister"><br>
 
-            <label for="check_rule_agree">Agree with terms of services </label>
-            <input type="checkbox" id="check_rule_agree" name="checkBoxAgreeRegister"><br>
+            <label for="city_r">City: </label><br>
+            <input type="text" id="city_r" name="city"><br>
 
+            <label for="check_rule_agree">Agree with terms of services <span class="red_star">*</span></label>
+            <input type="checkbox" id="check_rule_agree" name="checkBoxAgreeRegister"><br>
+            
             <input type="submit" name="bttRegister" value="Rejestruj">
         </form>
-    </div>
+    </main>
     <footer>
         <div>Kontakt</div>
     </footer>
