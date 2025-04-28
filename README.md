@@ -9,5 +9,5 @@ _(+ whether we have implemented those already)_
   - [x] Connection with database by SQLModel
   - [ ] REST API with FastAPI
 - [ ] Frontend website
-  - [ ] Scripted with HTMX + CSS + JS
+  - [x] Scripted with HTMX + CSS + JS
   - [ ] Hosted with NGINX proxy manager
