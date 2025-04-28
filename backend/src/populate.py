@@ -8,12 +8,14 @@ import random
 def populate(engine):
     session = Session(engine)
     for _ in range(100):
+        _forename = random.choice(forenames.forenames)
+        _surename = random.choice(surenames.surenames)
         _user = User(
             user_type=UserType.USER,
-            name=random.choice(forenames.forenames),
-            surename=random.choice(surenames.surenames),
-            phone=''.join([str(range(0, 10)) for i in range(9)]),
-            email='elo@zelo.pl',
+            name= _forename,
+            surename= _surename,
+            phone=''.join([i for i in range(9)]),
+            email='{}.{}@elozelo.pl'.format(_forename, _surename),
             gender=Gender.FEMALE,
             pay=21.37
         )
