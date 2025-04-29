@@ -14,7 +14,7 @@ def populate(engine):
             user_type=UserType.USER,
             name= _forename,
             surename= _surename,
-            phone=''.join([i for i in range(9)]),
+            phone='123123123',#.join([i for i in range(9)]),
             email='{}.{}@elozelo.pl'.format(_forename, _surename),
             gender=Gender.FEMALE,
             pay=21.37

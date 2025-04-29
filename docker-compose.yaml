@@ -6,3 +6,7 @@ services:
     volumes:
       - ./backend/src:/app
       - ./backend/db:/app/db
+  frontend:
+    image: frontend
+    build:
+      dockerfile: frontend/frontend.Dockerfile
