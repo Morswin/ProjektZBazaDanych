@@ -1,4 +1,4 @@
-ulice = [
+street_names = [
     "Lipowa",
     "Klonowa",
     "Długa",

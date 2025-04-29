@@ -44,6 +44,7 @@ class User(SQLModel, table=True):
 
     # Relations
     orders: list["Order"] = Relationship(back_populates="users", link_model=OrderHistory)
+    addresses: list["Address"] = Relationship(back_populates="users", link_model=AddressList)
     tickets: list["Ticket"] = Relationship(back_populates="user")
     drivers: list["Driver"] = Relationship(back_populates="user")
 
@@ -93,6 +94,7 @@ class Address(SQLModel, table=True):
     id: int | None = Field(default=None, primary_key=True)
 
     # Relations
+    users: list["User"] = Relationship(back_populates="addresses", link_model=AddressList)
     orders: list["Order"] = Relationship(back_populates="address")
 
     # Fields
