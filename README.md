@@ -12,3 +12,4 @@ _(+ whether we have implemented those already)_
 - [ ] Frontend website
   - [x] Scripted with HTMX + CSS + JS
   - [ ] Hosted with NGINX proxy manager
+- [ ] Communicate frontend and backend
