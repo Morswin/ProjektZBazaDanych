@@ -1,5 +1,6 @@
-from models import User, UserType, Gender, Food, Address, VehicleType, Vehicle
+from models import User, UserType, Gender, Food, Address, VehicleType, Vehicle, Hours, Score
 from sqlmodel import Session
+from datetime import time
 import raw_forenames as forenames
 import raw_surenames as surenames
 import raw_cities as cities
@@ -17,6 +18,8 @@ def populate(engine):
         # Arrays for later linking
         _addresses: list[Address] = []
         _food: list[Food] = []
+        _hours: list[Hours] = []
+        _scores: list[Score] = []
         _users: list[User] = []  # This is for later linking relations with other tablesi
         _vehicles: list[Vehicle] = []
         _vehicle_types: list[VehicleType] = []
@@ -73,6 +76,27 @@ def populate(engine):
             )
             session.add(_vehicle)
             _vehicles.append(_vehicle)
+        # Hours
+        for _ in range(40):
+            _from = time()
+            _from.hour = random.randint(0, 23)
+            _to = time()
+            _to.hour = random.randint(0, 23)
+            _hour = Hours(
+                time_from=_from,
+                time_t=_to,
+                day="We didn't agree on this after all. Don't use this. I think that this is a good place for an enum"
+            )
+            session.add(_hour)
+            _hours.append(_hour)
+        # Scores
+        for _ in range(200):
+            _score = Score(
+                amount=random.randint(0, 10),
+                sum=0.0
+            )
+            session.add(_score)
+            _scores.append(_score)
         session.commit()
 
 def gen_phone(phone_number_length=9) -> str:
