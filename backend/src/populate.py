@@ -99,7 +99,7 @@ def populate(engine):
                 name=_restauran_name,
                 pay_cut=random.random(),
                 email="{}@restaurant.pl".format(
-                    _restauran_name.replace(" ", ".")
+                    _restauran_name.lower().replace(" ", ".")
                 ),
                 phone=gen_phone()
             )
