@@ -1,6 +1,6 @@
-from models import User, UserType, Gender, Food, Address, VehicleType, Vehicle, Hours, Score
+from models import User, UserType, Gender, Food, Address, VehicleType, Vehicle, Hours, Score, Restaurant, Driver, Ticket, TicketType, TicketState, Order, OrderStatus
 from sqlmodel import Session
-from datetime import time
+from datetime import time, date, datetime
 import raw_forenames as forenames
 import raw_surenames as surenames
 import raw_cities as cities
@@ -10,6 +10,7 @@ import raw_food as food
 import raw_vehicle_names as vehicle_names
 import raw_vehicle_brands as vehicle_brands
 import raw_vehicle_models as vehicle_models
+import raw_restaurant_names as restaurant_names
 import random
 
 
@@ -17,15 +18,19 @@ def populate(engine):
     with Session(engine) as session:
         # Arrays for later linking
         _addresses: list[Address] = []
+        _drivers: list[Driver] = []
         _food: list[Food] = []
         _hours: list[Hours] = []
+        _orders: list[Order] = []
+        _restaurants: list[Restaurant] = []
         _scores: list[Score] = []
+        _tickets: list[Ticket] = []
         _users: list[User] = []  # This is for later linking relations with other tablesi
         _vehicles: list[Vehicle] = []
         _vehicle_types: list[VehicleType] = []
         # Filling tables
         # Users
-        for _ in range(100):
+        for _ in range(200):
             _forename = random.choice(forenames.forenames)
             _surename = random.choice(surenames.surenames)
             _user = User(
@@ -39,15 +44,6 @@ def populate(engine):
             )
             session.add(_user)
             _users.append(_user)
-        # Food
-        for food_name in food.food:
-            _f = Food(  # _food was already taken, so here is _f
-                price=random.random() * 100.0,
-                name=food_name,
-                description="No description provided"
-            )
-            session.add(_f)
-            _food.append(_f)
         # Addresses
         for _ in range(100):
             _address = Address(
@@ -77,11 +73,9 @@ def populate(engine):
             session.add(_vehicle)
             _vehicles.append(_vehicle)
         # Hours
-        for _ in range(40):
-            _from = time()
-            _from.hour = random.randint(0, 23)
-            _to = time()
-            _to.hour = random.randint(0, 23)
+        for _ in range(300):
+            _from = time(random.randint(0, 23), random.randint(0, 59))
+            _to = time(random.randint(0, 23), random.randint(0, 59))
             _hour = Hours(
                 time_from=_from,
                 time_t=_to,
@@ -97,10 +91,99 @@ def populate(engine):
             )
             session.add(_score)
             _scores.append(_score)
+        # Restarans
+        for _restauran_name in restaurant_names.restaurant_names:
+            _restaurant = Restaurant(
+                hours=random.choice(_hours),
+                score=random.choice(_scores),
+                name=_restauran_name,
+                pay_cut=random.random(),
+                email="{}@restaurant.pl".format(
+                    _restauran_name.replace(" ", ".")
+                ),
+                phone=gen_phone()
+            )
+            session.add(_restaurant)
+            _restaurants.append(_restaurant)
+        # Food
+        for food_name in food.food:
+            _f = Food(  # _food was already taken, so here is _f
+                restaurant=random.choice(_restaurants),
+                price=random.random() * 100.0,
+                name=food_name,
+                description="No description provided"
+            )
+            session.add(_f)
+            _food.append(_f)
+        # Drivers
+        for _ in range(80):
+            _u = random.choice(_users)
+            _u.user_type = UserType.DRIVER
+            session.add(_u)
+            _driver = Driver(
+                vehicle=random.choice(_vehicles),
+                hours=random.choice(_hours),
+                user=_u,
+                score=random.choice(_scores),
+                date_drivers_license=gen_date(),
+                date_ID=gen_date(),
+                is_occupied=False 
+            )
+            session.add(_driver)
+            _drivers.append(_driver)
+        # Tickets
+        for _ in range(200):
+            _ticket = Ticket(
+                user=random.choice(_users),
+                ticket_type=random.choice(list(TicketType)),
+                ticket_state=random.choice(list(TicketState)),
+                description="No description"
+            )
+            session.add(_ticket)
+            _tickets.append(_ticket)
+        # Orders
+        for _ in range(150):
+            _d = gen_date()
+            _order = Order(
+                address=random.choice(_addresses),
+                restaurant=random.choice(_restaurants),
+                tickets=random.choice(_tickets),
+                status=random.choice(list(OrderStatus)),
+                price=random.random() * 1000.0,
+                order_date=datetime(
+                    _d.year,
+                    _d.month,
+                    _d.day,
+                    random.randint(0, 23),
+                    random.randint(0, 59)
+                ),
+                weight=random.random() * 100.0,
+                score_driver=random.random() * 10.0,
+                score_restaurant = random.random() * 10.0
+            )
+            session.add(_order)
+            _orders.append(_order)
         session.commit()
+
+
+def gen_date() -> date:
+    try:
+        return date(
+            random.randint(1980, 2060),
+            random.randint(1, 12),
+            random.randint(1, 31)
+        )
+    except:
+        return date(
+            random.randint(1980, 2060),
+            random.randint(1, 12),
+            1
+        )
+
 
 def gen_phone(phone_number_length=9) -> str:
     return ''.join([str(random.randint(0, 9)) for _ in range(phone_number_length)])
+
 
 def rand_gender() -> Gender:
     # The logic here goes as follow

@@ -1,1 +1,1 @@
-rm ./backend/db/db.sqlite
+rm -f ./backend/db/db.sqlite
