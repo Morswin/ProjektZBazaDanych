@@ -1,7 +1,5 @@
 from datetime import date, time, datetime
 from enum import Enum
-from sqlalchemy import Column
-from sqlalchemy.types import Enum as SqlEnum
 from sqlmodel import Field, SQLModel, Relationship
 
 
@@ -49,12 +47,12 @@ class User(SQLModel, table=True):
     drivers: list["Driver"] = Relationship(back_populates="user")
 
     # Fields
-    user_type: UserType = Field(sa_column=Column(SqlEnum(UserType)))
+    user_type: UserType
     name: str
     surename: str
     phone: str
     email: str
-    gender: Gender = Field(sa_column=Column(SqlEnum(Gender)))
+    gender: Gender
     pay: float
 
 
