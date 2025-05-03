@@ -1,13 +1,28 @@
 from sqlmodel import SQLModel, create_engine
-# from models import *
+from contextlib import asynccontextmanager
+from fastapi import FastAPI
 import populate
 
 
-if __name__ == "__main__":
-    # The 2 lines below may need to be rewritten later to use python's os path join, but I am not sure how to combine it with SQLModel's local path thing for now.
-    sqlite_file = "db.sqlite" 
-    sqlite_url = f"sqlite:///db/{sqlite_file}"
+# SQLModel
+sqlite_file = "db.sqlite" 
+sqlite_url = f"sqlite:///db/{sqlite_file}"
+
+
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    # Initialize things
     engine = create_engine(sqlite_url, echo=True)
     SQLModel.metadata.create_all(engine)
     populate.populate(engine)
+    yield
+    # Deinitialize
 
+
+# FastAPI
+app = FastAPI(lifespan=lifespan)
+
+
+@app.get("/")
+async def root():
+    return {"message": "Hello World"}
