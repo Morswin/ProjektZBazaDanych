@@ -13,3 +13,14 @@ services:
     image: frontend
     build:
       dockerfile: frontend/frontend.Dockerfile
+  reverse-proxy:
+    image: reverse-proxy
+    build:
+      dockerfile: reverse-proxy/reverse-proxy.Dockerfile
+    ports:
+      - "80:80"
+      - "81:81"
+      - "443:443"
+    volumes:
+      - ./reverse-proxy/data:/data
+      - ./reverse-proxy/letsencrypt:/etc/letsencrypt
