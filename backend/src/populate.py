@@ -1,4 +1,4 @@
-from models import User, UserType, Gender, Food, Address, VehicleType, Vehicle, Hours, Score, Restaurant, Driver, Ticket, TicketType, TicketState, Order, OrderStatus
+from models import User, UserType, Gender, Food, Address, VehicleType, Vehicle, Hours, Score, Restaurant, Driver, Ticket, TicketType, TicketState, Order, OrderStatus, OrderHistory, AddressList, FoodOrder
 from sqlmodel import Session
 from datetime import time, date, datetime
 import raw_forenames as forenames
@@ -18,10 +18,13 @@ def populate(engine):
     with Session(engine) as session:
         # Arrays for later linking
         _addresses: list[Address] = []
+        _address_list: list[AddressList] = []
         _drivers: list[Driver] = []
         _food: list[Food] = []
+        _food_orders: list[FoodOrder] = []
         _hours: list[Hours] = []
         _orders: list[Order] = []
+        _order_history: list[OrderHistory] = []
         _restaurants: list[Restaurant] = []
         _scores: list[Score] = []
         _tickets: list[Ticket] = []
@@ -163,6 +166,31 @@ def populate(engine):
             )
             session.add(_order)
             _orders.append(_order)
+        # OrderHistory
+        for _ in range(400):
+            _historical_order = OrderHistory(
+                order=random.choice(_orders),
+                user=random.choice(_users)
+            )
+            session.add(_historical_order)
+            _order_history.append(_historical_order)
+        # AddressList
+        for _ in range(250):
+            _address_in_list = AddressList(
+                user=random.choice(_users),
+                address=random.choice(_addresses)
+            )
+            session.add(_address_in_list)
+            _address_list.append(_address_in_list)
+        # FoodOrders
+        for _ in range(600):
+            _food_order = FoodOrder(
+                food=random.choice(_food),
+                order=random.choice(_orders),
+                quantity=random.randint(1, 25)
+            )
+            session.add(_food_order)
+            _food_orders.append(_food_order)
         session.commit()
 
 

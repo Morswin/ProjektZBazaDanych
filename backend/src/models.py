@@ -3,27 +3,6 @@ from enum import Enum
 from sqlmodel import Field, SQLModel, Relationship
 
 
-class OrderHistory(SQLModel, table=True):
-    __tablename__ = "order_history"
-
-    # Keys
-    id: int | None = Field(default=None, primary_key=True)
-    order_id: int | None = Field(default=None, foreign_key="order.id")
-    user_id: int | None = Field(default=None, foreign_key="user.id")
-
-    # Relations
-    order: Order | None = Relationship(back_populates="orders")
-    user: User | None = Relationship(back_populates="users")
-
-
-class AddressList(SQLModel, table=True):
-    __tablename__ = "address_list"
-
-    #keys
-    id_user: int | None = Field(default=None, foreign_key="user.id", primary_key=True)
-    id_address: int | None = Field(default=None, foreign_key="address.id", primary_key=True)
-
-
 class UserType(Enum):
     GUEST = 1
     USER = 2
@@ -45,8 +24,8 @@ class User(SQLModel, table=True):
     id: int | None = Field(default=None, primary_key=True)
 
     # Relations
-    orders: list["Order"] = Relationship(back_populates="users")
-    addresses: list["Address"] = Relationship(back_populates="users", link_model=AddressList)
+    orders: list["OrderHistory"] = Relationship(back_populates="user")
+    addresses: list["AddressList"] = Relationship(back_populates="user")
     tickets: list["Ticket"] = Relationship(back_populates="user")
     drivers: list["Driver"] = Relationship(back_populates="user")
 
@@ -96,7 +75,7 @@ class Address(SQLModel, table=True):
     id: int | None = Field(default=None, primary_key=True)
 
     # Relations
-    users: list["User"] = Relationship(back_populates="addresses", link_model=AddressList)
+    users: list["AddressList"] = Relationship(back_populates="address")
     orders: list["Order"] = Relationship(back_populates="address")
 
     # Fields
@@ -105,6 +84,19 @@ class Address(SQLModel, table=True):
     zip_code: str
     house_number: int
     apartment_number: int
+
+
+class AddressList(SQLModel, table=True):
+    __tablename__ = "address_list"
+
+    #keys
+    id: int | None = Field(default=None, primary_key=True)
+    user_id: int | None = Field(default=None, foreign_key="user.id")
+    address_id: int | None = Field(default=None, foreign_key="address.id")
+
+    # Relations
+    user: User | None = Relationship(back_populates="addresses")
+    address: Address | None = Relationship(back_populates="users")
 
 
 class Hours(SQLModel, table=True):
@@ -178,7 +170,7 @@ class Order(SQLModel, table=True):
     ticket_id: int | None = Field(default=None, foreign_key="ticket.id")
 
     # Relations
-    users: list["User"] = Relationship(back_populates="orders")
+    users: list["OrderHistory"] = Relationship(back_populates="order")
     food_orders: list["FoodOrder"] = Relationship(back_populates="order")
     address: Address | None = Relationship(back_populates="orders")
     restaurant: Restaurant | None = Relationship(back_populates="orders")
@@ -191,6 +183,19 @@ class Order(SQLModel, table=True):
     weight: float
     score_driver: float
     score_restaurant: float
+
+
+class OrderHistory(SQLModel, table=True):
+    __tablename__ = "order_history"
+
+    # Keys
+    id: int | None = Field(default=None, primary_key=True)
+    order_id: int | None = Field(default=None, foreign_key="order.id")
+    user_id: int | None = Field(default=None, foreign_key="user.id")
+
+    # Relations
+    order: Order | None = Relationship(back_populates="users")
+    user: User | None = Relationship(back_populates="orders")
 
 
 class Food(SQLModel, table=True):
