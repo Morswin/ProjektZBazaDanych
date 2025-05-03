@@ -3,13 +3,17 @@ from enum import Enum
 from sqlmodel import Field, SQLModel, Relationship
 
 
-# It must be declared befor user and order for some reason. Otherwise the IDE spams with errors.
 class OrderHistory(SQLModel, table=True):
     __tablename__ = "order_history"
 
     # Keys
-    id_order: int | None = Field(default=None, foreign_key="order.id", primary_key=True)
-    id_user: int | None = Field(default=None, foreign_key="user.id", primary_key=True)
+    id: int | None = Field(default=None, primary_key=True)
+    order_id: int | None = Field(default=None, foreign_key="order.id")
+    user_id: int | None = Field(default=None, foreign_key="user.id")
+
+    # Relations
+    order: Order | None = Relationship(back_populates="orders")
+    user: User | None = Relationship(back_populates="users")
 
 
 class AddressList(SQLModel, table=True):
@@ -41,7 +45,7 @@ class User(SQLModel, table=True):
     id: int | None = Field(default=None, primary_key=True)
 
     # Relations
-    orders: list["Order"] = Relationship(back_populates="users", link_model=OrderHistory)
+    orders: list["Order"] = Relationship(back_populates="users")
     addresses: list["Address"] = Relationship(back_populates="users", link_model=AddressList)
     tickets: list["Ticket"] = Relationship(back_populates="user")
     drivers: list["Driver"] = Relationship(back_populates="user")
@@ -174,7 +178,7 @@ class Order(SQLModel, table=True):
     ticket_id: int | None = Field(default=None, foreign_key="ticket.id")
 
     # Relations
-    users: list["User"] = Relationship(back_populates="orders", link_model=OrderHistory)
+    users: list["User"] = Relationship(back_populates="orders")
     food_orders: list["FoodOrder"] = Relationship(back_populates="order")
     address: Address | None = Relationship(back_populates="orders")
     restaurant: Restaurant | None = Relationship(back_populates="orders")
