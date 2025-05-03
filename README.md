@@ -7,9 +7,11 @@ _(+ whether we have implemented those already)_
 - [x] Database in SQLite3
 - [ ] Backend in Python
   - [x] Connection with database by SQLModel
-  - [ ] Fill the database with some generated data
+  - [x] Fill the database with some generated data
   - [ ] REST API with FastAPI
 - [ ] Frontend website
   - [x] Scripted with HTMX + CSS + JS
-  - [ ] Hosted with NGINX proxy manager
+  - [ ] Hosted with Express.js
+  - [ ] Connection with backend with Express.js
 - [ ] Communicate frontend and backend
+- [ ] Reverse proxy with Nginx reverse proxy
