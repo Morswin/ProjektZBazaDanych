@@ -1,3 +1,3 @@
-FROM jc21/nginx-proxy-manager:latest
+FROM node:latest
 
-CMD ["/bin/bash"]
+WORKDIR /app
