@@ -13,6 +13,9 @@ services:
     image: frontend
     build:
       dockerfile: frontend/frontend.Dockerfile
+    ports:
+      - "4321:4321"
+    command: node ./dist/server/entry.mjs
   reverse-proxy:
     image: reverse-proxy
     build:
