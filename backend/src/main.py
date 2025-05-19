@@ -1,28 +1,30 @@
-from sqlmodel import SQLModel, create_engine
+from models import Restaurant
+from sqlmodel import SQLModel, create_engine, select, Session
 from contextlib import asynccontextmanager
-from fastapi import FastAPI
+from fastapi import FastAPI, Depends
 import populate
 
 
-# SQLModel
 sqlite_file = "db.sqlite" 
 sqlite_url = f"sqlite:///db/{sqlite_file}"
+engine = create_engine(sqlite_url, echo=True)
 
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    # Initialize things
-    engine = create_engine(sqlite_url, echo=True)
     SQLModel.metadata.create_all(engine)
     populate.populate(engine)
     yield
-    # Deinitialize
 
 
-# FastAPI
+def get_session():
+    with Session(engine) as session:
+        yield session
+
+
 app = FastAPI(lifespan=lifespan)
 
 
-@app.get("/")
-async def root():
-    return {"message": "Hello World"}
+@app.get("/restaurants", response_model=list[Restaurant])
+def root(session: Session = Depends(get_session)):
+    return session.exec(select(Restaurant)).all()
