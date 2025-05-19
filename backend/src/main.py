@@ -26,5 +26,9 @@ app = FastAPI(lifespan=lifespan)
 
 
 @app.get("/restaurants", response_model=list[Restaurant])
-def root(session: Session = Depends(get_session)):
+def list_restaurants(session: Session = Depends(get_session)):
     return session.exec(select(Restaurant)).all()
+
+
+# @app.post()
+# def 

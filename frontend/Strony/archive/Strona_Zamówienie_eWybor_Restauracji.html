@@ -98,6 +98,17 @@
             });
         });
     </script>
+    <script>
+        document.addEventListener('DOMContentLoaded', async () => {
+            try {
+                const response = await fetch("localhost:8000/restaurants");
+                console.log(response);
+            }
+            catch (e) {
+                console.log("Nie przyszyły dane o restauracjach.");
+            }
+        });
+    </script>
 </head>
 <body>
     <header>
