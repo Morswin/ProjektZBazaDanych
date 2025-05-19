@@ -85,7 +85,7 @@
         const forgotPasswordButton = document.querySelector('.button.forgot-password');
         forgotPasswordButton.textContent = "Nie nasz problem";
     }
-        function handleLogin() {
+        async function handleLogin() {
             const email = document.getElementById('email').value.trim();
             const password = document.getElementById('password').value.trim();
             const loginButton = document.querySelector('.button.login');
@@ -102,11 +102,28 @@
             loginButton.style.backgroundColor = "#d4edda"; // Zielone tło
             loginButton.style.color = "#155724"; // Zielony tekst
     
+            fetch(`http://localhost:8000/login?email=${encodeURIComponent(email)}`)
+                .then(res => res.json())
+                .then(data => console.log(data))
+                .catch(err => console.log("Nie znaleziono użytkownika"));
+
             // Przekierowanie na stronę główną po 300 ms
-            setTimeout(() => {
-                window.location.href = "Strona_Glowna.html";
-            }, 300);
+            // setTimeout(() => {
+            //     window.location.href = "Strona_Glowna.html";
+            // }, 300);
         }
+    </script>
+    <script>
+        document.addEventListener('DOMContentLoaded', async () => {
+            try {
+                const response = await fetch("http://localhost:8000/users");
+                const data = await response.json();
+                console.log(data);
+            }
+            catch (e) {
+                console.log("Nie przyszyły dane o użytkownikach.");
+            }
+        });
     </script>
 </head>
 <body>
