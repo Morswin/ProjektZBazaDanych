@@ -2,6 +2,7 @@ from models import Restaurant
 from sqlmodel import SQLModel, create_engine, select, Session
 from contextlib import asynccontextmanager
 from fastapi import FastAPI, Depends
+from fastapi.middleware.cors import CORSMiddleware
 import populate
 
 
@@ -23,6 +24,14 @@ def get_session():
 
 
 app = FastAPI(lifespan=lifespan)
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],  # Możesz podać konkretny origin np. ["http://localhost:3000"]
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 
 @app.get("/restaurants", response_model=list[Restaurant])
