@@ -109,15 +109,25 @@ def populate(engine):
             session.add(_restaurant)
             _restaurants.append(_restaurant)
         # Food
-        for food_name in food.food:
-            _f = Food(  # _food was already taken, so here is _f
-                restaurant=random.choice(_restaurants),
-                price=random.random() * 100.0,
-                name=food_name,
-                description="No description provided"
-            )
-            session.add(_f)
-            _food.append(_f)
+        for _restaurant in _restaurants:
+            for _ in range(random.randint(5, 10)):
+                _f = Food(  # _food was already taken, so here is _f
+                    restaurant=random.choice(_restaurants),
+                    price=random.random() * 100.0,
+                    name=random.choice(food.food),
+                    description="No description provided"
+                )
+                session.add(_f)
+                _food.append(_f)
+        # for food_name in food.food:
+        #     _f = Food(  # _food was already taken, so here is _f
+        #         restaurant=random.choice(_restaurants),
+        #         price=random.random() * 100.0,
+        #         name=food_name,
+        #         description="No description provided"
+        #     )
+        #     session.add(_f)
+        #     _food.append(_f)
         # Drivers
         for _ in range(80):
             _u = random.choice(_users)
