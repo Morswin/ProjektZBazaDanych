@@ -100,7 +100,7 @@
     }
     </style>
     <script>
-        function validateRegistration() {
+        async function validateRegistration() {
             const firstName = document.getElementById('first-name').value.trim();
             const lastName = document.getElementById('last-name').value.trim();
             const gender = document.getElementById('gender').value;
@@ -143,10 +143,15 @@
             registerButton.style.backgroundColor = "#d4edda"; // Zielone tło
             registerButton.style.color = "#155724"; // Zielony tekst
     
+            fetch(`http://localhost:8000/login?email=${encodeURIComponent(email)}`)
+                .then(res => res.json())
+                .then(data => console.log(data))
+                .catch(err => console.log("Nie znaleziono użytkownika"));
+
             // Przekierowanie na stronę główną po 300 ms
-            setTimeout(() => {
-                window.location.href = "Strona_Glowna.html";
-            }, 300);
+            // setTimeout(() => {
+            //     window.location.href = "Strona_Glowna.html";
+            // }, 300);
         }
     </script>
 </head>

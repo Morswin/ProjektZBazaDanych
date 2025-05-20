@@ -17,6 +17,16 @@ class Gender(Enum):
     UNSPECIFIED = 4
 
 
+class UserCreate(SQLModel):
+    user_type: UserType
+    name: str
+    surename: str
+    phone: str
+    email: str
+    gender: Gender
+    pay: float
+
+
 class User(SQLModel, table=True):
     __tablename__ = "user"
 

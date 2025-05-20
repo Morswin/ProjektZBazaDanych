@@ -1,4 +1,4 @@
-from models import Restaurant, User
+from models import Restaurant, User, UserCreate
 from sqlmodel import SQLModel, create_engine, select, Session
 from contextlib import asynccontextmanager
 from fastapi import FastAPI, Depends, HTTPException
@@ -50,3 +50,12 @@ def login(email: str, session: Session = Depends(get_session)):
 @app.get("/users", response_model=list[User])
 def list_users(session: Session = Depends(get_session)):
     return session.exec(select(User)).all()
+
+
+@app.post("/register", response_model=User)
+def create_user(user: UserCreate, session: Session = Depends(get_session)):
+    new_user = User(**user.dict())
+    session.add(new_user)
+    session.commit()
+    session.refresh(new_user)
+    return new_user
