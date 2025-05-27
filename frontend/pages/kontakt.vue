@@ -12,7 +12,7 @@
     </form>
 </template>
 
-<style>
+<style scoped>
     form {
         width: 50%;
         border: 2px solid black;

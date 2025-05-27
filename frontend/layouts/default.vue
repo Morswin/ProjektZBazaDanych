@@ -5,7 +5,7 @@
     </main>
 </template>
 
-<style>
+<style scoped>
     * {
         margin: 0px;
     }
