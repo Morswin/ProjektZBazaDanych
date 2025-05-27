@@ -2,6 +2,7 @@ services:
   backend:
     image: backend
     build:
+      context: .
       dockerfile: backend/backend.Dockerfile
     ports:
       - "8000:8000"
