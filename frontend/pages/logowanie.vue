@@ -1,12 +1,40 @@
+<script setup>
+    import { ref } from 'vue';
+
+    const loginEmail = ref('');
+    const loginResult = ref('');
+    const loginSuccessful = ref(false);
+
+    async function login() {
+        try {
+            let result = await $fetch(`http://localhost:8000/login/`, {
+                method: 'GET',
+                params: {
+                    email: loginEmail.value
+                }
+            });
+            loginResult.value = result;
+            loginSuccessful.value = true;
+            console.log(loginResult.value?.email);
+        }
+        catch (e) {
+            loginResult.value = "Błędne logowanie";
+            loginSuccessful.value = true;
+            console.log(loginResult.value);
+        }
+    }
+</script>
+
 <template>
     <form>
         <label for="email">E-mail:</label>
-        <input type="email" id="email" placeholder="elożelo@student.polsl.pl">
+        <input v-model="loginEmail" type="email" id="email" placeholder="elożelo@student.polsl.pl">
         <label for="password">Hasło:</label>
         <input type="password" id="password" placeholder="********">
-        <Button class="login-button">Zaloguj się</Button>
+        <Button @click="login" class="login-button">Zaloguj się</Button>
         <Button class="login-button">Zapomniałem hasła</Button>
         <Button class="login-button" targetUrl="/rejestracja">Zarejestruj się</Button>
+        <p v-if="loginSuccessful">{{ loginResult }}</p>
     </form>
 </template>
 
@@ -33,5 +61,9 @@
 
     .login-button {
         margin: 5px 0;
+    }
+
+    form > p {
+        text-align: center;
     }
 </style>
