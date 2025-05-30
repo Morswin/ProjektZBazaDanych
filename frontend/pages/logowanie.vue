@@ -15,7 +15,7 @@
                         email: loginEmail.value
                     }
                 });
-                loginResult.value = result;
+                loginResult.value = `Zalogowano jako: ${result.name}`;
                 loginSuccessful.value = true;
                 console.log(loginResult.value?.email);
             }

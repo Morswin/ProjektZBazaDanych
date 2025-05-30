@@ -1,4 +1,4 @@
-from models import Restaurant, User, UserCreate, UserType, Gender
+from models import Restaurant, User, UserCreate, UserType, Gender, Food
 from sqlmodel import SQLModel, create_engine, select, Session
 from contextlib import asynccontextmanager
 from fastapi import FastAPI, Depends, HTTPException
@@ -37,6 +37,19 @@ app.add_middleware(
 @app.get("/restaurants", response_model=list[Restaurant])
 def list_restaurants(session: Session = Depends(get_session)):
     return session.exec(select(Restaurant)).all()
+
+
+@app.get("/restaurant", response_model=Restaurant)
+def restaurant_info(restaurant_id: int, session: Session = Depends(get_session)):
+    restaurant = session.exec(select(Restaurant).where(Restaurant.id == restaurant_id)).first()
+    if not restaurant:
+        raise HTTPException(status_code=404, detail="Restaurant not found")
+    return restaurant
+
+
+@app.get("/availablefood", response_model=list[Food])
+def available_food_in_restaurant(restaurant_id: int, session: Session = Depends(get_session)):
+    return session.exec(select(Food).where(Food.restaurant_id == restaurant_id)).all()
 
 
 @app.get("/login", response_model=User)
