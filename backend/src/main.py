@@ -1,4 +1,4 @@
-from models import Restaurant, User, UserCreate
+from models import Restaurant, User, UserCreate, UserType, Gender
 from sqlmodel import SQLModel, create_engine, select, Session
 from contextlib import asynccontextmanager
 from fastapi import FastAPI, Depends, HTTPException
@@ -27,7 +27,7 @@ app = FastAPI(lifespan=lifespan)
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # Możesz podać konkretny origin np. ["http://localhost:3000"]
+    allow_origins=["http://localhost:3000"],  # używaj konkretnego originu
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -47,14 +47,17 @@ def login(email: str, session: Session = Depends(get_session)):
     return user
 
 
-@app.get("/users", response_model=list[User])
-def list_users(session: Session = Depends(get_session)):
-    return session.exec(select(User)).all()
-
-
 @app.post("/register", response_model=User)
 def create_user(user: UserCreate, session: Session = Depends(get_session)):
-    new_user = User(**user.dict())
+    new_user = User(
+        user_type = UserType.USER,
+        name = user.name,
+        surename = user.surename,
+        phone = user.phone,
+        email = user.email,
+        gender = Gender.UNSPECIFIED,
+        pay = 0
+    )
     session.add(new_user)
     session.commit()
     session.refresh(new_user)

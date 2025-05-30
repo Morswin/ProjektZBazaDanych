@@ -1,3 +1,7 @@
 <template>
-    Restauracja
+
 </template>
+
+<style scoped>
+
+</style>
