@@ -5,7 +5,7 @@
         <Button targetUrl="/rejestracja">Rejestracja</Button>
         <Button targetUrl="/zamowienia">Zamówienia</Button>
         <Button targetUrl="/kurier">Widok Kuriera</Button>
-        <Button targetUrl="/restauracja">widok Restauracji</Button>
+        <Button targetUrl="/restauracja">Widok Restauracji</Button>
         <Button targetUrl="/kontakt">Kontakt</Button>
     </nav>
 </template>
