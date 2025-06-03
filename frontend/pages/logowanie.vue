@@ -20,7 +20,7 @@
                 });
                 loginResult.value = `Zalogowano jako: ${result.name}`;
                 loginSuccessful.value = true;
-                userStore.logIn(result.name);
+                userStore.logIn(`${result.name} ${result.surename}`);
                 console.log(loginResult.value?.email);
             }
             catch (e) {

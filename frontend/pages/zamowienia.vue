@@ -1,15 +1,15 @@
 <script setup>
     import {ref} from 'vue';
+    import { useOrderStore } from '@/stores/useOrderStore';
+    import { FoodOrder } from '@/libs/foodOrder';
 
-    /* Logic behind this variable:
-     * 1 - Let's user choose a restaruant, based on what they're selling
-     * 2 - Goes to that restaurant's menu and lets user decide based on that
-     * 3 - Summary and finalizing the order. Now it's going to get recorded in the db
-     */
-    const orderingStage = ref(0);
+    const orderStore = useOrderStore();
+
     const restaurants = ref([]);
-    const restaurant = ref({});
     const restaurant_available_food = ref([]);
+
+    const orderAddress = ref("");
+    const orderEmail = ref("");
 
     async function goToRestaurantList() {
         // get the restaurants
@@ -17,19 +17,16 @@
             let result = await $fetch(`http://localhost:8000/restaurants`, {
                 method: 'GET'
             });
-            console.log(result);
             restaurants.value = result;
         }
         catch (e) {
             console.error("Nie udało się uzyskać listy restauracji", e);
         }
         // move to next stage
-        orderingStage.value = 1;
+        orderStore.orderStage = 1;
     }
 
     async function getRestaurantData(id) {
-        // restaurantId.value = id;
-        console.log(id)
         try {
             let result = await $fetch(`http://localhost:8000/restaurant`, {
                 method: 'GET',
@@ -37,7 +34,7 @@
                     restaurant_id: id
                 }
             });
-            restaurant.value = result;
+            orderStore.orderRestaurant = result;
         }
         catch (e) {
             console.error('Błąd z danymi restauracji: ', e)
@@ -49,28 +46,56 @@
                     restaurant_id: id
                 }
             });
-            console.log(result);
             restaurant_available_food.value = result;
         }
         catch (e) {
             console.error("Błąd z listą jedzenia ", e)
         }
-        orderingStage.value = 2;
+        orderStore.orderStage = 2;
+    }
+
+    function updateFoodOrderList(event, food) {
+        if (event.target.checked) {
+            // Checkbox was checked
+            orderStore.addFoodToOrder(food);
+        }
+        else {
+            // Checkbox was unchecked
+            orderStore.removerFoodFromOrder(food);
+        }
+    }
+
+    function createOrder() {
+        orderStore.orderStage = 3;
+    }
+
+    function resetOrder() {
+        orderStore.resetOrder();
+    }
+
+    function finalizeOrder() {
+        if (orderAddress.value.length == 0) {
+            alert("Nie podano adresu");
+        }
+        else if (orderEmail.value.length == 0) {
+            alert("Nie podano E-maila");
+        }
+        // Request o utworzenie orderu
     }
 </script>
 
 <template>
     <main>
-        <div v-if="orderingStage==0" class="przed-zamowieniem">
+        <div v-if="orderStore.orderStage==0" class="przed-zamowieniem">
             <Button @click="goToRestaurantList">Zamów Jedzenie</Button>
         </div>
-        <div v-else-if="orderingStage==1" class="wybor-restauracji">
+        <div v-else-if="orderStore.orderStage==1" class="wybor-restauracji">
             <div @click="() => getRestaurantData(restaurant.id)" v-for="restaurant in restaurants" :key="restaurant.id" class="restaurant-simplified">
                 <h1>{{ restaurant.name }}</h1>
             </div>
         </div>
-        <div v-else-if="orderingStage==2" class="wybor-jedzenia">
-            <h1>{{ restaurant.name }}</h1>
+        <div v-else-if="orderStore.orderStage==2" class="wybor-jedzenia">
+            <h1>{{ orderStore.orderRestaurant.name }}</h1>
             <table>
                 <thead>
                     <tr>
@@ -83,18 +108,75 @@
                     <tr v-for="food in restaurant_available_food" :key="food.id">
                         <td>{{ food.name }}</td>
                         <td>{{ `${food.price.toFixed(2)}zł` }}</td>
-                        <td><input type="checkbox"></td>
+                        <td><input @change="updateFoodOrderList($event, food)" type="checkbox"></td>
                     </tr>
                 </tbody>
             </table>
-            <Button>Zamów</Button>
+            <Button @click="createOrder">Zamów</Button>
         </div>
+        <div v-else-if="orderStore.orderStage==3" class="finalizacja-zamowienia">
+            <div class="finalizacja-zamowienia-dane">
+                <div>
+                    <h3>Wymagane dane</h3>
+                    <label for="address">Adres: <span style="color: red;">*</span></label>
+                    <input v-model="orderAddress" type="text" id="address">
+                    <label for="phone">Telefon:</label>
+                    <input type="text" id="phone">
+                    <label for="email">E-mail: <span style="color: red;">*</span></label>
+                    <input v-model="orderEmail" type="text" id="email">
+                </div>
+                <div>
+                    <h3>Zamówienie do "{{ orderStore.orderRestaurant.name }}"</h3>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Jedzenie</th>
+                                <th>Cena</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr v-for="food in orderStore.foodInOrder" :key="food.foodId">
+                                <td>
+                                    {{ food.name }}
+                                </td>
+                                <td>
+                                    {{ food.price.toFixed(2) }}
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Suma:</td>
+                                <td>
+                                    {{ orderStore.foodInOrder.length>0 ? `${orderStore.getTotalPrice().toFixed(2)}zł` : "0,00zł" }}
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div>
+                    <h3>Metoda płatności <span style="color: red;">*</span></h3>
+                    <label>
+                        <input type="radio" name="payment" value="blik"> Blik
+                    </label>
+                    <label>
+                        <input type="radio" name="payment" value="przelewy24"> Przelewy24
+                    </label>
+                    <label>
+                        <input type="radio" name="payment" value="gotowka"> Gotówka
+                    </label>
+                </div>
+            </div>
+            <div class="finalizacja-zamowienia-przyciski">
+                <Button @click="finalizeOrder">Zamów</Button>
+                <Button @click="resetOrder">Anuluj Zamówienie</Button>
+            </div>
+        </div>
+        <Button @click="resetOrder" v-if="(!orderStore.orderStage==0) && (!orderStore.orderStage==3)" id="reset-order-button">Reset Zamówienia</Button>
     </main>
 </template>
 
 <style scoped>
     main {
-        width: 60%;
+        width: 60vw;
         display: flex;
         justify-content: center;
     }
@@ -148,5 +230,47 @@
         border: 1px solid black;
         padding: 10px;
         text-align: center;
+    }
+
+    div.finalizacja-zamowienia {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding: 20px;
+    }
+
+    div.finalizacja-zamowienia-dane {
+        display: grid;
+        grid-template-columns: 2fr 2fr 1fr;
+        gap: 20px;
+        width: 80vw;
+        border: 2px solid black;
+        padding: 20px;
+        background-color: #f9f9f9;
+    }
+
+    div.finalizacja-zamowienia-dane > div {
+        border: 1px solid black;
+        padding: 10px;
+        display: flex;
+        flex-direction: column;
+    }
+
+    div.finalizacja-zamowienia-dane > div > h3 {
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    div.finalizacja-zamowienia-przyciski {
+        display: flex;
+        justify-content: space-around;
+        width: 80vw;
+        margin-top: 20px;
+    }
+
+    #reset-order-button {
+        position: absolute;
+        top: 80px;
+        left: 20px;
     }
 </style>
