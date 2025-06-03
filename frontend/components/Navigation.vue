@@ -1,5 +1,13 @@
+<script setup>
+    import { useUserStore } from '#imports';
+
+    const user = useUserStore();
+
+</script>
+
 <template>
     <nav>
+        <span v-if="user.loggedIn"> Logged in as: <b> {{ user.userName }} </b> </span>
         <Button targetUrl="/">Strona Główna</Button>
         <Button targetUrl="/logowanie">Logowanie</Button>
         <Button targetUrl="/rejestracja">Rejestracja</Button>

@@ -1,5 +1,8 @@
 <script setup>
     import { ref } from 'vue';
+    import { useUserStore } from '@/stores/useUserStore';
+
+    const userStore = useUserStore();
 
     const loginEmail = ref('');
     const loginPassword = ref('');
@@ -9,7 +12,7 @@
     async function login() {
         if (loginPassword.value.length > 0) {
             try {
-                let result = await $fetch(`http://localhost:8000/login/`, {
+                let result = await $fetch(`http://localhost:8000/login`, {
                     method: 'GET',
                     params: {
                         email: loginEmail.value
@@ -17,12 +20,13 @@
                 });
                 loginResult.value = `Zalogowano jako: ${result.name}`;
                 loginSuccessful.value = true;
+                userStore.logIn(result.name);
                 console.log(loginResult.value?.email);
             }
             catch (e) {
                 loginResult.value = "Błędne logowanie";
                 loginSuccessful.value = true;
-                console.log(loginResult.value);
+                console.log(loginResult.value, e);
             }
         }
         else {
@@ -41,7 +45,7 @@
         <Button @click="login" class="login-button">Zaloguj się</Button>
         <Button class="login-button">Zapomniałem hasła</Button>
         <Button class="login-button" targetUrl="/rejestracja">Zarejestruj się</Button>
-        <p v-if="loginSuccessful">{{ loginResult }}</p>
+        <!-- <p v-if="loginSuccessful">{{ loginResult }}</p> -->
     </form>
 </template>
 
