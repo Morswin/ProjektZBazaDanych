@@ -24,7 +24,7 @@ class UserCreate(SQLModel):
     phone: str
     email: str
     gender: Gender
-    pay: float
+    address: str
 
 
 class User(SQLModel, table=True):
@@ -40,13 +40,13 @@ class User(SQLModel, table=True):
     drivers: list["Driver"] = Relationship(back_populates="user")
 
     # Fields
-    user_type: UserType
+    user_type: UserType | None
     name: str
     surename: str
     phone: str
     email: str
     gender: Gender
-    pay: float
+    pay: float | None
 
 
 class TicketType(Enum):

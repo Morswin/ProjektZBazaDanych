@@ -1,4 +1,4 @@
-from models import Restaurant, User, UserCreate
+from models import Restaurant, User, UserCreate, UserType, Gender, Food
 from sqlmodel import SQLModel, create_engine, select, Session
 from contextlib import asynccontextmanager
 from fastapi import FastAPI, Depends, HTTPException
@@ -27,7 +27,7 @@ app = FastAPI(lifespan=lifespan)
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # Możesz podać konkretny origin np. ["http://localhost:3000"]
+    allow_origins=["http://localhost:3000"],  # używaj konkretnego originu
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -39,6 +39,19 @@ def list_restaurants(session: Session = Depends(get_session)):
     return session.exec(select(Restaurant)).all()
 
 
+@app.get("/restaurant", response_model=Restaurant)
+def restaurant_info(restaurant_id: int, session: Session = Depends(get_session)):
+    restaurant = session.exec(select(Restaurant).where(Restaurant.id == restaurant_id)).first()
+    if not restaurant:
+        raise HTTPException(status_code=404, detail="Restaurant not found")
+    return restaurant
+
+
+@app.get("/availablefood", response_model=list[Food])
+def available_food_in_restaurant(restaurant_id: int, session: Session = Depends(get_session)):
+    return session.exec(select(Food).where(Food.restaurant_id == restaurant_id)).all()
+
+
 @app.get("/login", response_model=User)
 def login(email: str, session: Session = Depends(get_session)):
     user = session.exec(select(User).where(User.email == email)).first()
@@ -47,14 +60,17 @@ def login(email: str, session: Session = Depends(get_session)):
     return user
 
 
-@app.get("/users", response_model=list[User])
-def list_users(session: Session = Depends(get_session)):
-    return session.exec(select(User)).all()
-
-
 @app.post("/register", response_model=User)
 def create_user(user: UserCreate, session: Session = Depends(get_session)):
-    new_user = User(**user.dict())
+    new_user = User(
+        user_type = UserType.USER,
+        name = user.name,
+        surename = user.surename,
+        phone = user.phone,
+        email = user.email,
+        gender = Gender.UNSPECIFIED,
+        pay = 0
+    )
     session.add(new_user)
     session.commit()
     session.refresh(new_user)
