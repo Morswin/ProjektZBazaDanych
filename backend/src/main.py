@@ -76,36 +76,6 @@ def create_user(user: UserCreate, session: Session = Depends(get_session)):
     session.refresh(new_user)
     return new_user
 
-# class OrderCreate(SQLModel):
-#     food_id: list[int]
-#     price: int
-#     user: int
-#     restaurant: int
-
-# class Order(SQLModel, table=True):
-#     __tablename__ = "order"
-
-#     # Keys
-#     id: int | None = Field(default=None, primary_key=True)
-#     address_id: int | None = Field(default=None, foreign_key="address.id")
-#     restaurant_id: int | None = Field(default=None, foreign_key="restaurant.id")
-#     ticket_id: int | None = Field(default=None, foreign_key="ticket.id")
-
-#     # Relations
-#     users: list["OrderHistory"] = Relationship(back_populates="order")
-#     food_orders: list["FoodOrder"] = Relationship(back_populates="order")
-#     address: Address | None = Relationship(back_populates="orders")
-#     restaurant: Restaurant | None = Relationship(back_populates="orders")
-#     tickets: Ticket | None = Relationship(back_populates="orders")
-
-#     # Fields
-#     status: OrderStatus
-#     price: float
-#     order_date: datetime | None
-#     weight: float | None
-#     score_driver: float | None
-#     score_restaurant: float | None
-
 @app.post("/order", response_model=Order)
 def create_order(order_data: OrderCreate, session: Session = Depends(get_session)):
     new_order = Order(
