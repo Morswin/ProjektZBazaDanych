@@ -1,5 +1,96 @@
+<script setup>
+    import { ref, onMounted } from 'vue';
+
+    const selectedRestaurant = ref(false);
+    const restaurants = ref([]);
+    const restaurant = ref({});
+    const restaurantAvailableFood = ref([]);
+
+    const foodName = ref("");
+    const foodPrice = ref("");
+
+    async function getRestaurants() {
+        try {
+            let result = await $fetch(`http://localhost:8000/restaurants`, {
+                method: 'GET'
+            });
+            restaurants.value = result;
+        }
+        catch (e) {
+            console.error("Popsuło sie, sorry: ", e);
+        }
+    }
+    onMounted(getRestaurants);
+
+    async function getRestaurant(id) {
+        try {
+            let result = await $fetch(`http://localhost:8000/restaurant`, {
+                method: 'GET',
+                params: {
+                    restaurant_id: id
+                }
+            });
+            restaurant.value = result;
+            selectedRestaurant.value = true;
+        }
+        catch (e) {
+            console.log("Nie pykło: ", e);
+        }
+        try {
+            let result = await $fetch(`http://localhost:8000/availablefood`, {
+                method: 'GET',
+                params: {
+                    restaurant_id: id
+                }
+            });
+            restaurantAvailableFood.value = result;
+        }
+        catch (e) {
+            console.error("Błąd z listą jedzenia ", e)
+        }
+    }
+
+    async function dodajJedzenie() {
+        try {
+            let result = await $fetch(`http://localhost:8000/newfood`, {
+                method: 'POST',
+                body: {
+                    restaurant_id: restaurant.value.id,
+                    price: parseFloat(foodPrice.value),
+                    name: foodName.value
+                }
+            });
+            console.log(result);
+            foodPrice.value = "";
+            foodName.value = "";
+        }
+        catch (e) {
+            console.error("Dodawanie jedzenia nie powiodło się:", e);
+        }
+        try {
+            let result = await $fetch(`http://localhost:8000/availablefood`, {
+                method: 'GET',
+                params: {
+                    restaurant_id: restaurant.value.id
+                }
+            });
+            restaurantAvailableFood.value = result;
+        }
+        catch (e) {
+            console.error("Błąd z listą jedzenia ", e)
+        }
+    }
+</script>
+
 <template>
-    <main>
+    <main v-if="!selectedRestaurant">
+        <div class="wybierz-restauracje">
+            <Button @click="() => {getRestaurant(restaurant.id)}" v-for="restaurant in restaurants" :key="restaurant.id" class="wybierz-restauracje-przycisk">
+                {{ restaurant.name }}
+            </Button>
+        </div>
+    </main>
+    <main v-else>
         <div>
             <h3>Menu</h3>
             <table>
@@ -10,9 +101,9 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr>
-                        <td>Test</td>
-                        <td>21,37zł</td>
+                    <tr v-for="food in restaurantAvailableFood" :key="food.id">
+                        <td>{{ food.name }}</td>
+                        <td>{{ `${food.price.toFixed(2)} zł` }}</td>
                     </tr>
                 </tbody>
             </table>
@@ -21,25 +112,12 @@
             <h3>Dodaj do menu</h3>
             <div class="dodaj-do-menu">
                 <div>
-                    <input type="text" placeholder="Jedzenie">
-                    <input type="text" placeholder="Cena">
-                    <Button>Dodaj</Button>
+                    <input v-model="foodName" type="text" placeholder="Jedzenie">
+                    <input v-model="foodPrice" type="text" placeholder="Cena">
+                    <Button @click="dodajJedzenie">Dodaj</Button>
                 </div>
             </div>
         </div>
-        <!-- <div>
-            <h3>Dane</h3>
-            <table>
-                <thead>
-                    <tr>
-                        <th></th>
-                        <th></th>
-                        <th></th>
-                        <th></th>
-                    </tr>
-                </thead>
-            </table>
-        </div> -->
     </main>
 </template>
 
@@ -89,5 +167,15 @@
 
     textarea {
         height: 100%;
+    }
+
+    div.wybierz-restauracje {
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+    }
+
+    .wybierz-restauracje-przycisk {
+        font-size: 2rem;
     }
 </style>

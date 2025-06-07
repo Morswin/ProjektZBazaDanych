@@ -215,6 +215,12 @@ class OrderHistory(SQLModel, table=True):
     user: User | None = Relationship(back_populates="orders")
 
 
+class FoodCreate(SQLModel):
+    restaurant_id: int
+    name: str
+    price: float
+
+
 class Food(SQLModel, table=True):
     __tablename__ = "food"
 
@@ -228,7 +234,7 @@ class Food(SQLModel, table=True):
 
     # Fields
     name: str
-    description: str
+    description: str | None
     # alergens: str  # For now we will not implement this. It may be a separate table with a many to many relation.
     price: float
 

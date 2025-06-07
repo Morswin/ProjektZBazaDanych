@@ -1,4 +1,4 @@
-from models import Restaurant, User, UserCreate, UserType, Gender, Food, OrderCreate, Order, OrderStatus, FoodOrder
+from models import Restaurant, User, UserCreate, UserType, Gender, Food, OrderCreate, Order, OrderStatus, FoodOrder, FoodCreate
 from sqlmodel import SQLModel, create_engine, select, Session
 from contextlib import asynccontextmanager
 from fastapi import FastAPI, Depends, HTTPException
@@ -76,6 +76,7 @@ def create_user(user: UserCreate, session: Session = Depends(get_session)):
     session.refresh(new_user)
     return new_user
 
+
 @app.post("/order", response_model=Order)
 def create_order(order_data: OrderCreate, session: Session = Depends(get_session)):
     new_order = Order(
@@ -93,9 +94,19 @@ def create_order(order_data: OrderCreate, session: Session = Depends(get_session
         )
         session.add(n_f)
         food_order.append(n_f)
-    # new_order.food_orders = food_order
-    # user = session.exec(select(User).where(User.id == order_data.user_id)).first()
-    # user.
     session.commit()
     session.refresh(new_order)
     return new_order
+
+
+@app.post("/newfood", response_model=Food)
+def add_new_food_to_a_restaurant(food_data: FoodCreate, session: Session = Depends(get_session)):
+    new_food = Food(
+        name = food_data.name,
+        price = food_data.price,
+        restaurant = session.exec(select(Restaurant).where(Restaurant.id == food_data.restaurant_id)).first()
+    )
+    session.add(new_food)
+    session.commit()
+    session.refresh(new_food)
+    return new_food
