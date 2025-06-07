@@ -73,7 +73,7 @@
         orderStore.resetOrder();
     }
 
-    function finalizeOrder() {
+    async function finalizeOrder() {
         if (orderAddress.value.length == 0) {
             alert("Nie podano adresu");
         }
@@ -81,6 +81,24 @@
             alert("Nie podano E-maila");
         }
         // Request o utworzenie orderu
+        else {
+            console.log(orderStore.getArrayOfFoodId());
+            try {
+                const response = await $fetch(`http://localhost:8000/order`, {
+                    method: 'POST',
+                    body: {
+                        food_id: orderStore.getArrayOfFoodId(),
+                        price: orderStore.getTotalPrice(),
+                        restaurant_id: orderStore.orderRestaurant.id
+                    }
+                });
+                console.log("Złożono zamówienie: ");
+                console.log(response);
+            }
+            catch (e) {
+                console.error("Nie dało się utworzyć zamówienia: ", e);
+            }
+        }
     }
 </script>
 

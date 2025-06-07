@@ -170,6 +170,13 @@ class OrderStatus(Enum):
     CANCELLED = 6
 
 
+class OrderCreate(SQLModel):
+    food_id: list[int]
+    price: float
+    # user_id: int
+    restaurant_id: int
+
+
 class Order(SQLModel, table=True):
     __tablename__ = "order"
 
@@ -189,10 +196,10 @@ class Order(SQLModel, table=True):
     # Fields
     status: OrderStatus
     price: float
-    order_date: datetime
-    weight: float
-    score_driver: float
-    score_restaurant: float
+    order_date: datetime | None
+    weight: float | None
+    score_driver: float | None
+    score_restaurant: float | None
 
 
 class OrderHistory(SQLModel, table=True):
@@ -239,7 +246,7 @@ class FoodOrder(SQLModel, table=True):
     food: Food | None = Relationship(back_populates="food_orders")
 
     # Fields
-    quantity: int
+    quantity: int | None
 
 
 class VehicleType(SQLModel, table=True):

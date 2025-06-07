@@ -1,4 +1,4 @@
-from models import Restaurant, User, UserCreate, UserType, Gender, Food
+from models import Restaurant, User, UserCreate, UserType, Gender, Food, OrderCreate, Order, OrderStatus, FoodOrder
 from sqlmodel import SQLModel, create_engine, select, Session
 from contextlib import asynccontextmanager
 from fastapi import FastAPI, Depends, HTTPException
@@ -75,3 +75,57 @@ def create_user(user: UserCreate, session: Session = Depends(get_session)):
     session.commit()
     session.refresh(new_user)
     return new_user
+
+# class OrderCreate(SQLModel):
+#     food_id: list[int]
+#     price: int
+#     user: int
+#     restaurant: int
+
+# class Order(SQLModel, table=True):
+#     __tablename__ = "order"
+
+#     # Keys
+#     id: int | None = Field(default=None, primary_key=True)
+#     address_id: int | None = Field(default=None, foreign_key="address.id")
+#     restaurant_id: int | None = Field(default=None, foreign_key="restaurant.id")
+#     ticket_id: int | None = Field(default=None, foreign_key="ticket.id")
+
+#     # Relations
+#     users: list["OrderHistory"] = Relationship(back_populates="order")
+#     food_orders: list["FoodOrder"] = Relationship(back_populates="order")
+#     address: Address | None = Relationship(back_populates="orders")
+#     restaurant: Restaurant | None = Relationship(back_populates="orders")
+#     tickets: Ticket | None = Relationship(back_populates="orders")
+
+#     # Fields
+#     status: OrderStatus
+#     price: float
+#     order_date: datetime | None
+#     weight: float | None
+#     score_driver: float | None
+#     score_restaurant: float | None
+
+@app.post("/order", response_model=Order)
+def create_order(order_data: OrderCreate, session: Session = Depends(get_session)):
+    new_order = Order(
+        status = OrderStatus.SUBMITED,
+        price = order_data.price,
+        # food_orders = [],
+        restaurant = session.exec(select(Restaurant).where(Restaurant.id == order_data.restaurant_id)).first()
+    )
+    session.add(new_order)
+    food_order = []
+    for f in order_data.food_id:
+        n_f = FoodOrder(
+            order = new_order,
+            food = session.exec(select(Food).where(Food.id == f)).first()
+        )
+        session.add(n_f)
+        food_order.append(n_f)
+    # new_order.food_orders = food_order
+    # user = session.exec(select(User).where(User.id == order_data.user_id)).first()
+    # user.
+    session.commit()
+    session.refresh(new_order)
+    return new_order

@@ -57,7 +57,13 @@ export const useOrderStore = defineStore(
             foodInOrder.value = [];
         }
 
-        return {foodInOrder, orderStage, orderRestaurant, addFoodToOrder, removerFoodFromOrder, resetOrder, getTotalPrice};
+        function getArrayOfFoodId() {
+            let val = [];
+            foodInOrder.value.forEach(f => val.push(f.id));
+            return val;
+        }
+
+        return {foodInOrder, orderStage, orderRestaurant, addFoodToOrder, removerFoodFromOrder, resetOrder, getTotalPrice, getArrayOfFoodId};
     }
     // ,
     // {

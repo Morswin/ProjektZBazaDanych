@@ -12,9 +12,10 @@
         <Button targetUrl="/logowanie">Logowanie</Button>
         <Button targetUrl="/rejestracja">Rejestracja</Button>
         <Button targetUrl="/zamowienia">Zamówienia</Button>
-        <Button targetUrl="/kurier">Widok Kuriera</Button>
+        <!-- <Button targetUrl="/kurier">Widok Kuriera</Button> -->
         <Button targetUrl="/restauracja">Widok Restauracji</Button>
         <Button targetUrl="/kontakt">Kontakt</Button>
+        <Button targetUrl="localhost:8000/docs">Backend API</Button>
     </nav>
 </template>
 
