@@ -1,4 +1,4 @@
-from models import Restaurant, User, UserCreate, UserType, Gender, Food, OrderCreate, Order, OrderStatus, FoodOrder, FoodCreate
+from models import Restaurant, User, UserCreate, UserType, Gender, Food, OrderCreate, Order, OrderStatus, FoodOrder, FoodCreate, Ticket, TicketCreate, TicketState, TicketType
 from sqlmodel import SQLModel, create_engine, select, Session
 from contextlib import asynccontextmanager
 from fastapi import FastAPI, Depends, HTTPException
@@ -110,3 +110,16 @@ def add_new_food_to_a_restaurant(food_data: FoodCreate, session: Session = Depen
     session.commit()
     session.refresh(new_food)
     return new_food
+
+
+@app.post("/ticket", response_model=Ticket)
+def make_a_complaint(ticket_data: TicketCreate, session: Session = Depends(get_session)):
+    new_ticket = Ticket(
+        ticket_type = TicketType.COMPLAIN,
+        ticket_state = TicketState.PENDING,
+        description = ticket_data.description
+    )
+    session.add(new_ticket)
+    session.commit()
+    session.refresh(new_ticket)
+    return new_ticket

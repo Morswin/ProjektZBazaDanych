@@ -61,6 +61,10 @@ class TicketState(Enum):
     REJECTED = 3
 
 
+class TicketCreate(SQLModel):
+    description: str
+
+
 class Ticket(SQLModel, table=True):
     __tablename__ = "ticket"
 

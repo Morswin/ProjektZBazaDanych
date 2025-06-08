@@ -1,3 +1,30 @@
+<script setup>
+    import { ref } from 'vue';
+
+    const description = ref("");
+
+    async function makeTicket() {
+        if (description.value.length == 0) {
+            alert("Nie zgłaszamy pustych ticketów! >:(");
+        }
+        else {
+            try {
+                const response = await $fetch(`http://localhost:8000/ticket`, {
+                    method: 'POST',
+                    body: {
+                        description: description.value
+                    }   
+                });
+                console.log("Zgłoszono!");
+                console.log(response);
+            }
+            catch (e) {
+                console.error("Nie udało się zgłosić problemu:", e);
+            }
+        }
+    }
+</script>
+
 <template>
     <form>
         <label for="incident">Co się stało:</label>
@@ -7,8 +34,8 @@
             <option value="inne">Inne</option>
         </select>
         <label for="description">Opis zdarzenia</label>
-        <textarea name="description" placeholder="Opisz zdarzenie..." id=""></textarea>
-        <Button class="przycisk">Zgłoś zdarzenie</Button>
+        <textarea v-model="description" name="description" placeholder="Opisz zdarzenie..." id=""></textarea>
+        <Button @click="makeTicket" class="przycisk">Zgłoś zdarzenie</Button>
     </form>
 </template>
 
